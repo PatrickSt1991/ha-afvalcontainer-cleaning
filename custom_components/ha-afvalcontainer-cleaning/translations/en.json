@@ -1,0 +1,42 @@
+
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure Container Cleaning",
+        "description": "Set up your container cleaning integration.",
+        "data": {
+          "provider": "Provider",
+          "postal_code": "Postal code",
+          "street_number": "Street number",
+          "suffix": "Address suffix",
+          "exclude_pickup_today": "Exclude today's pickup",
+          "date_isoformat": "Use ISO date format",
+          "default_label": "Default label when no data is available",
+          "exclude_list": "Waste type exclude list"
+        }
+      }
+    },
+    "error": {
+      "invalid_postal_code": "Invalid postal code format",
+      "invalid_street_number": "Street number must be numeric"
+    },
+    "abort": {
+      "already_configured": "Container Cleaning is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Container Cleaning Options",
+        "description": "Configure options for container cleaning integration.",
+        "data": {
+          "exclude_pickup_today": "Exclude today's pickup",
+          "date_isoformat": "Use ISO date format",
+          "default_label": "Default label when no data is available",
+          "exclude_list": "Waste type exclude list"
+        }
+      }
+    }
+  }
+}
