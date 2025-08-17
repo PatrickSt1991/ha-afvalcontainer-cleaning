@@ -9,7 +9,7 @@ AfvalWijzer().get_data('','','')
 
 - Comment out __init__.py
 - Update this file with your information (or the information you would like to test with, examples are in that file)
-- Then run python3 -m afvalwijzer.tests.test_module from this path <some dir>/homeassistant-afvalwijzer/custom_components 
+- Then run python3 -m ha-afvalcontainer-cleaning.tests.test_module from this path <some dir>/ha-afvalcontainer-cleaning/custom_components 
 
 """
 from ..collector import cleanprofs
