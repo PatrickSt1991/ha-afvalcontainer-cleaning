@@ -1,4 +1,7 @@
-# Afvalcontainer cleaning  
+# Afvalcontainer cleaning
+
+<img src="https://raw.githubusercontent.com/PatrickSt1991/ha-afvalcontainer-cleaning/refs/heads/main/clean-container.png" alt="clean container" width="500" height="600">
+
 Home Assistant integration for monitoring garbage container cleaning.  
 
 Need to know when your garbage containers will be cleaned?  
