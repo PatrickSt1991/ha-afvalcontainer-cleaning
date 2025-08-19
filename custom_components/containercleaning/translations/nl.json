@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configureer Container Cleaning",
+        "description": "Stel je Container Cleaning-integratie in.",
+        "data": {
+          "provider": "Provider",
+          "postal_code": "Postcode",
+          "street_number": "Huisnummer",
+          "suffix": "Huisnummer toevoeging",
+          "exclude_pickup_today": "Sluit ophalen van vandaag uit",
+          "date_isoformat": "Gebruik ISO-datumformaat",
+          "default_label": "Standaard label bij geen datum bekend",
+          "exclude_list": "Container uitsluiten"
+        }
+      }
+    },
+    "error": {
+      "invalid_postal_code": "Ongeldig postcodeformaat",
+      "invalid_street_number": "Huisnummer moet numeriek zijn"
+    },
+    "abort": {
+      "already_configured": "Container Cleaning is al geconfigureerd"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Container Cleaning Opties",
+        "description": "Pas extra opties aan voor de Container Cleaning-integratie.",
+        "data": {
+          "exclude_pickup_today": "Sluit ophalen van vandaag uit",
+          "date_isoformat": "Gebruik ISO-datumformaat",
+          "default_label": "Standaard label bij geen datum bekend",
+          "exclude_list": "Afvaltype uitsluiten"
+        }
+      }
+    }
+  }
+}
