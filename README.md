@@ -1,6 +1,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub release](https://img.shields.io/github/v/release/PatrickSt1991/ha-afvalcontainer-cleaning)](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/releases)
 [![License](https://img.shields.io/github/license/PatrickSt1991/ha-afvalcontainer-cleaning)](LICENSE)
+
 [![Validate](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/validate.yaml/badge.svg)](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/validate.yaml)
 [![CodeQL](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/github-code-scanning/codeql)
 [![Dependabot Updates](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/actions/workflows/dependabot/dependabot-updates)
