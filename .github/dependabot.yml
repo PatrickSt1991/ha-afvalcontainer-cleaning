@@ -4,3 +4,8 @@ updates:
     directory: "/custom_components/containercleaning"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
