@@ -1,6 +1,6 @@
 version: 2
 updates:
   - package-ecosystem: "pip"
-    directory: "/" 
+    directory: "/custom_components/containercleaning"
     schedule:
       interval: "weekly"
