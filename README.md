@@ -8,7 +8,7 @@
 
 # 🧼 Afvalcontainer Cleaning
 
-<img src="https://raw.githubusercontent.com/PatrickSt1991/ha-afvalcontainer-cleaning/refs/heads/main/clean-container.png" alt="clean container" width="400">
+<img src="https://madebypatrick.nl/assets/ha-cc-CUWVCUA3.svg" alt="clean container" width="400">
 
 A **Home Assistant integration** for monitoring **garbage container cleaning schedules**.  
 
