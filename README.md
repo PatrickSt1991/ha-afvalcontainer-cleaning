@@ -1,4 +1,5 @@
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-blue.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-blue.svg)](https://github.com/hacs/integration)
 [![GitHub release](https://img.shields.io/github/v/release/PatrickSt1991/ha-afvalcontainer-cleaning)](https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/releases)
 [![License](https://img.shields.io/github/license/PatrickSt1991/ha-afvalcontainer-cleaning)](LICENSE)
 
@@ -38,11 +39,15 @@ Currently, the integration supports the following providers/communities:
 
 ## 🚀 Installation
 
-### HACS (recommended)
-1. Make sure [HACS](https://hacs.xyz/) is installed in your Home Assistant.  
-2. Go to **HACS → Integrations → Custom Repositories**.  
-3. Add this repository URL and select **Integration**.  
-4. Install the integration and restart Home Assistant.  
+### Installation via HACS
+
+1. Ensure HACS is installed in your Home Assistant setup. If not, follow
+   the [HACS installation guide](https://hacs.xyz/docs/setup/download).
+2. Open the HACS panel in Home Assistant.
+3. Click on the `Frontend` or `Integrations` tab.
+4. Click the `+` button and search for `Afvalwijzer`.
+5. Click `Install` to add the component to your Home Assistant setup.
+6. Restart Home Assistant after the installation completes.
 
 ### Manual Installation
 1. Download or clone this repository.  
