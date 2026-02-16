@@ -5,6 +5,6 @@ ruff==0.67
 pre-commit==4.5.1
 bumpver==2025.1131
 urllib3>=1.26.5,<3
-flatdict==4.0.1
+flatdict==4.1.0
 requests
 re
