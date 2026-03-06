@@ -22,6 +22,10 @@ class WasteDataTransformer(object):
         exclude_list,
         default_label,
     ):
+        if not isinstance(waste_data_raw, list):
+            raise ValueError(
+                f"waste_data_raw must be a list, got {type(waste_data_raw).__name__}"
+            )
         waste_data_raw.sort(key=lambda item: datetime.strptime(item["date"], "%Y-%m-%d"))
         self.waste_data_raw = waste_data_raw
         self.exclude_pickup_today = exclude_pickup_today

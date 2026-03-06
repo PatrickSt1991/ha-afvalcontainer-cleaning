@@ -39,6 +39,12 @@ class MainCollector:
 
         waste_data_raw = self._get_waste_data_raw()
 
+        if not isinstance(waste_data_raw, list):
+            raise ValueError(
+                f"No valid waste data received from provider '{self.provider}'. "
+                "Check your postal code, street number, and provider configuration."
+            )
+
         # Transform raw waste data
         self._waste_data = WasteDataTransformer(
             waste_data_raw,
