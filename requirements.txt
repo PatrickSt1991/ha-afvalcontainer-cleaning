@@ -1,10 +1,10 @@
 colorlog==6.10.1
 homeassistant
-pip>=26.1,<26.2
+pip>=26.1.1,<26.2
 ruff==0.67
 pre-commit==4.6.0
 bumpver==2026.1132
-urllib3>=2.6.3,<3
+urllib3>=2.7.0,<3
 flatdict==4.1.0
 requests
 re
