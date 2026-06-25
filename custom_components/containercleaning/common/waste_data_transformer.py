@@ -88,8 +88,7 @@ class WasteDataTransformer(object):
             except Exception as err:
                 _LOGGER.warning("Unexpected error applying default labels: %s", err)
 
-            _LOGGER.debug("Structured %d waste types (with today: %d, without today: %d)",
-                len(waste_data_with_today), len(waste_data_with_today), len(waste_data_without_today))
+            _LOGGER.debug("Structured %d unique waste types", len(waste_data_with_today))
             return waste_data_with_today, waste_data_without_today
         except Exception as err:
             _LOGGER.error("Failed to structure waste data: %s", err)
