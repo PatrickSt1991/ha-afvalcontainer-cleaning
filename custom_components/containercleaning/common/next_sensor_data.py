@@ -28,7 +28,7 @@ class NextSensorData:
         try:
             return self.waste_data_after_date_selected[0]["date"]
         except IndexError:
-            _LOGGER.error("No waste data found after the selected date.")
+            _LOGGER.debug("No upcoming cleaning scheduled after the selected date")
             return None
 
     def __get_next_waste_in_days(self):
@@ -37,7 +37,7 @@ class NextSensorData:
                 return self.default_label
             return abs(self.next_waste_date.date() - date.today()).days
         except Exception as err:
-            _LOGGER.error(f"Error occurred in __get_next_waste_in_days: {err}")
+            _LOGGER.warning("Could not calculate days until next cleaning: %s", err)
             return self.default_label
 
     def __get_next_waste_type(self):
@@ -50,18 +50,21 @@ class NextSensorData:
                 if waste["date"] == self.next_waste_date
             ] or [self.default_label]
         except Exception as err:
-            _LOGGER.error(f"Error occurred in __get_next_waste_type: {err}")
+            _LOGGER.warning("Could not determine next container type: %s", err)
             return [self.default_label]
 
     def _gen_next_sensor_data(self):
         try:
-            return {
+            data = {
                 "next_date": self.next_waste_date if self.next_waste_date else self.default_label,
                 "next_in_days": self.next_waste_in_days,
                 "next_type": ", ".join(self.next_waste_type),
             }
+            _LOGGER.debug("Next cleaning: type=%s, date=%s, in %s day(s)",
+                data["next_type"], data["next_date"], data["next_in_days"])
+            return data
         except Exception as err:
-            _LOGGER.error(f"Error occurred in _gen_next_sensor_data: {err}")
+            _LOGGER.warning("Could not generate next sensor data: %s", err)
             return {}
 
     @property

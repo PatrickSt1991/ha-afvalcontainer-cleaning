@@ -35,7 +35,7 @@ class DaySensorData:
             if not day:
                 day.append(self.default_label)
         except Exception as err:
-            _LOGGER.error(f"Error occurred in __gen_day_sensor: {err}")
+            _LOGGER.warning("Could not generate day sensor for date %s: %s", date, err)
         return day
 
     def _gen_day_sensor_data(self):
@@ -44,8 +44,10 @@ class DaySensorData:
             day_sensor["today"] = ", ".join(self.waste_data_today)
             day_sensor["tomorrow"] = ", ".join(self.waste_data_tomorrow)
             day_sensor["day_after_tomorrow"] = ", ".join(self.waste_data_dot)
+            _LOGGER.debug("Day sensors — today: %s, tomorrow: %s, day after: %s",
+                day_sensor["today"], day_sensor["tomorrow"], day_sensor["day_after_tomorrow"])
         except Exception as err:
-            _LOGGER.error(f"Error occurred in _gen_day_sensor_data: {err}")
+            _LOGGER.warning("Could not generate day sensor data: %s", err)
         return day_sensor
 
     @property

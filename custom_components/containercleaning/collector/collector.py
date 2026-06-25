@@ -63,16 +63,15 @@ class MainCollector:
                 (SENSOR_COLLECTORS_CLEANPROFS, cleanprofs.get_waste_data_raw)
             ]
             for sensor_set, getter in common_providers:
-
                 keys = sensor_set.keys() if isinstance(sensor_set, dict) else sensor_set
                 if self.provider in keys:
+                    _LOGGER.debug("Using provider '%s' for %s %s", self.provider, self.postal_code, self.street_number)
                     return getter(self.provider, self.postal_code, self.street_number, self.suffix)
 
-            _LOGGER.error(f"Unknown provider: {self.provider}")
+            _LOGGER.error("Unknown provider '%s' — check your integration configuration", self.provider)
             raise ValueError(f"Unknown provider: {self.provider}")
 
-        except ValueError as err:
-            _LOGGER.error(f"Check platform settings: {err}")
+        except ValueError:
             raise
 
     @property

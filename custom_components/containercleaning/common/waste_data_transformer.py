@@ -86,11 +86,13 @@ class WasteDataTransformer(object):
                         if item_name not in waste_data_without_today.keys():
                             waste_data_without_today[item_name] = self.default_label
             except Exception as err:
-                _LOGGER.error(f"Other error occurred: {err}")
+                _LOGGER.warning("Unexpected error applying default labels: %s", err)
 
+            _LOGGER.debug("Structured %d waste types (with today: %d, without today: %d)",
+                len(waste_data_with_today), len(waste_data_with_today), len(waste_data_without_today))
             return waste_data_with_today, waste_data_without_today
         except Exception as err:
-            _LOGGER.error(f"Other error occurred: {err}")
+            _LOGGER.error("Failed to structure waste data: %s", err)
 
     ##########################################################################
     # GENERATE REQUIRED DATA FOR HASS SENSORS
@@ -113,7 +115,7 @@ class WasteDataTransformer(object):
             )
 
         except Exception as err:
-            _LOGGER.error(f"Other error occurred waste_types_provider: {err}")
+            _LOGGER.warning("Failed to collect waste types from raw data: %s", err)
 
         try:
             waste_data_formatted = [
@@ -126,7 +128,7 @@ class WasteDataTransformer(object):
             ]
 
         except Exception as err:
-            _LOGGER.error(f"Other error occurred waste_data_formatted: {err}")
+            _LOGGER.warning("Failed to format waste data: %s", err)
 
         days = DaySensorData(waste_data_formatted, self.default_label)
 
@@ -137,19 +139,21 @@ class WasteDataTransformer(object):
                 )
             )
         except Exception as err:
-            _LOGGER.error(f"Other error occurred waste_data_after_date_selected: {err}")
+            _LOGGER.warning("Failed to filter waste data by date: %s", err)
 
         next_data = NextSensorData(waste_data_after_date_selected, self.default_label)
 
         try:
             waste_data_custom = {**next_data.next_sensor_data, **days.day_sensor_data}
         except Exception as err:
-            _LOGGER.error(f"Other error occurred waste_data_custom: {err}")
+            _LOGGER.warning("Failed to merge custom sensor data: %s", err)
 
         try:
             waste_types_custom = list(sorted(waste_data_custom.keys()))
         except Exception as err:
-            _LOGGER.error(f"Other error occurred waste_types_custom: {err}")
+            _LOGGER.warning("Failed to sort custom waste types: %s", err)
+
+        _LOGGER.debug("Generated %d custom sensors (%s)", len(waste_types_custom), ", ".join(waste_types_custom))
 
         return (
             waste_data_provider,

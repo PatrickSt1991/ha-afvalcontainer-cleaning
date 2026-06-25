@@ -10,10 +10,10 @@
           "postal_code": "Postal code",
           "street_number": "Street number",
           "suffix": "Address suffix",
-          "exclude_pickup_today": "Exclude today's pickup",
+          "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
           "default_label": "Default label when no data is available",
-          "exclude_list": "Waste type exclude list"
+          "exclude_list": "Container type exclude list"
         }
       }
     },
@@ -31,10 +31,224 @@
         "title": "Container Cleaning Options",
         "description": "Configure options for container cleaning integration.",
         "data": {
-          "exclude_pickup_today": "Exclude today's pickup",
+          "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
           "default_label": "Default label when no data is available",
-          "exclude_list": "Waste type exclude list"
+          "exclude_list": "Container type exclude list"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "provider_gft": {
+        "name": "Organic Waste (GFT)",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_pmd": {
+        "name": "Plastics, Metal & Drink Cartons (PMD)",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_restafval": {
+        "name": "Residual Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_papier": {
+        "name": "Paper & Cardboard",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_glas": {
+        "name": "Glass",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_plastic": {
+        "name": "Plastic",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_textiel": {
+        "name": "Textile",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_chemisch": {
+        "name": "Chemical Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_grofvuil": {
+        "name": "Bulky Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_tuinafval": {
+        "name": "Garden Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_kerstbomen": {
+        "name": "Christmas Trees",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_takken": {
+        "name": "Branches",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_snoeiafval": {
+        "name": "Pruning Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_pmd_restafval": {
+        "name": "PMD Residual Waste",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_best_tas": {
+        "name": "Best Bag",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_restwagen": {
+        "name": "Residual Waste Cart",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "provider_restafvalzakken": {
+        "name": "Residual Waste Bags",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Cleaning date today", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_tomorrow": { "name": "Cleaning date tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Cleaning date day after tomorrow", "state": { "true": "Yes", "false": "No" } },
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_today": {
+        "name": "Today",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_tomorrow": {
+        "name": "Tomorrow",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_day_after_tomorrow": {
+        "name": "Day After Tomorrow",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_next_date": {
+        "name": "Next Cleaning Date",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Days until cleaning date" },
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_next_in_days": {
+        "name": "Next Cleaning In Days",
+        "state_attributes": {
+          "last_update": { "name": "Last update" }
+        }
+      },
+      "custom_next_type": {
+        "name": "Next Container Type",
+        "state_attributes": {
+          "last_update": { "name": "Last update" }
         }
       }
     }

@@ -9,10 +9,10 @@
           "postal_code": "Postcode",
           "street_number": "Huisnummer",
           "suffix": "Huisnummer toevoeging",
-          "exclude_pickup_today": "Sluit ophalen van vandaag uit",
+          "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
           "default_label": "Standaard label bij geen datum bekend",
-          "exclude_list": "Container uitsluiten"
+          "exclude_list": "Containertype uitsluiten"
         }
       }
     },
@@ -30,10 +30,224 @@
         "title": "Container Cleaning Opties",
         "description": "Pas extra opties aan voor de Container Cleaning-integratie.",
         "data": {
-          "exclude_pickup_today": "Sluit ophalen van vandaag uit",
+          "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
           "default_label": "Standaard label bij geen datum bekend",
-          "exclude_list": "Afvaltype uitsluiten"
+          "exclude_list": "Containertype uitsluiten"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "provider_gft": {
+        "name": "GFT",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_pmd": {
+        "name": "PMD",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_restafval": {
+        "name": "Restafval",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_papier": {
+        "name": "Papier",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_glas": {
+        "name": "Glas",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_plastic": {
+        "name": "Plastic",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_textiel": {
+        "name": "Textiel",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_chemisch": {
+        "name": "Chemisch afval",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_grofvuil": {
+        "name": "Grofvuil",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_tuinafval": {
+        "name": "Tuinafval",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_kerstbomen": {
+        "name": "Kerstbomen",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_takken": {
+        "name": "Takken",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_snoeiafval": {
+        "name": "Snoeiafval",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_pmd_restafval": {
+        "name": "PMD Restafval",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_best_tas": {
+        "name": "Best-tas",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_restwagen": {
+        "name": "Restwagen",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "provider_restafvalzakken": {
+        "name": "Restafvalzakken",
+        "state_attributes": {
+          "is_collection_date_today": { "name": "Reinigingsdatum vandaag", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_tomorrow": { "name": "Reinigingsdatum morgen", "state": { "true": "Ja", "false": "Nee" } },
+          "is_collection_date_day_after_tomorrow": { "name": "Reinigingsdatum overmorgen", "state": { "true": "Ja", "false": "Nee" } },
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_today": {
+        "name": "Vandaag",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_tomorrow": {
+        "name": "Morgen",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_day_after_tomorrow": {
+        "name": "Overmorgen",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_next_date": {
+        "name": "Volgende reinigingsdatum",
+        "state_attributes": {
+          "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_next_in_days": {
+        "name": "Reiniging over (dagen)",
+        "state_attributes": {
+          "last_update": { "name": "Laatste update" }
+        }
+      },
+      "custom_next_type": {
+        "name": "Volgend containertype",
+        "state_attributes": {
+          "last_update": { "name": "Laatste update" }
         }
       }
     }
