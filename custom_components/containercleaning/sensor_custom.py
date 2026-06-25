@@ -86,8 +86,8 @@ class CustomSensor(CoordinatorEntity, SensorEntity):
     def extra_state_attributes(self):
         """Return the attributes of the sensor."""
         last_update = (
-            self.coordinator.last_update_success_time.isoformat()
-            if self.coordinator.last_update_success_time
+            self.coordinator.last_updated.isoformat()
+            if self.coordinator.last_updated
             else None
         )
         attrs = {ATTR_LAST_UPDATE: last_update}
