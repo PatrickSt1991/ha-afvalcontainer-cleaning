@@ -47,11 +47,6 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         ).hexdigest()
 
     @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
-
-    @property
     def translation_key(self) -> str:
         """Return the translation key for the sensor, based on waste type."""
         key = self.waste_type.replace("-", "_").replace(" ", "_")
