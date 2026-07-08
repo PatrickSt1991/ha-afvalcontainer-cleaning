@@ -68,6 +68,8 @@ You can configure the integration either via the **UI** (recommended) or with `c
 
 When no cleaning date is available, sensors no longer use a custom fallback label. Home Assistant now shows its built-in translated unknown/unavailable state.
 
+Entity names now use Home Assistant translations. If older entities were created while running a previous naming scheme, the integration performs an automatic one-time registry migration and recreates only broken nameless sensor entries.
+
 
 ---
 

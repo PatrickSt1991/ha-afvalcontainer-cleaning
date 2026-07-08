@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -67,7 +68,36 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
+async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Remove broken nameless entity registry entries so HA can recreate them correctly."""
+    registry = er.async_get(hass)
+    registry_entries = er.async_entries_for_config_entry(registry, entry.entry_id)
+
+    removed = 0
+    for registry_entry in registry_entries:
+        if registry_entry.domain != "sensor" or registry_entry.platform != DOMAIN:
+            continue
+
+        custom_name = registry_entry.name
+        original_name = registry_entry.original_name
+        has_no_name = custom_name is None and original_name is None
+        has_blank_name = isinstance(custom_name, str) and not custom_name.strip()
+
+        if has_no_name or has_blank_name:
+            registry.async_remove(registry_entry.entity_id)
+            removed += 1
+
+    if removed:
+        _LOGGER.info(
+            "Removed %d broken entity registry entries for %s; they will be recreated with translated names",
+            removed,
+            DOMAIN,
+        )
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    await _async_migrate_broken_entity_names(hass, entry)
+
     coordinator = ContainerCleaningCoordinator(hass, entry.data)
     await coordinator.async_config_entry_first_refresh()
 
