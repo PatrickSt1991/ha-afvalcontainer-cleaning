@@ -1,5 +1,6 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -109,10 +110,45 @@ async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigE
         )
 
 
+def _provider_display_name(provider: str) -> str:
+    """Return a human-friendly provider display name."""
+    mapping = {
+        "cleanprofs": "CleanProfs",
+    }
+    provider_key = provider.strip().lower()
+    if provider_key in mapping:
+        return mapping[provider_key]
+    return provider.strip().title() if provider.strip() else "Container Cleaning"
+
+
+async def _async_migrate_device_names(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Update existing device registry names/models to provider display branding."""
+    provider_name = _provider_display_name(str(entry.data.get(CONF_COLLECTOR, "")))
+    device_registry = dr.async_get(hass)
+    devices = dr.async_entries_for_config_entry(device_registry, entry.entry_id)
+
+    updated = 0
+    for device in devices:
+        needs_name_update = (device.name or "").strip().casefold() != provider_name.casefold()
+        needs_model_update = (device.model or "").strip().casefold() != provider_name.casefold()
+
+        if needs_name_update or needs_model_update:
+            device_registry.async_update_device(
+                device.id,
+                name=provider_name,
+                model=provider_name,
+            )
+            updated += 1
+
+    if updated:
+        _LOGGER.info("Updated %d device registry entries to provider name '%s'", updated, provider_name)
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if entry.title.strip().casefold() in {"", DOMAIN}:
         hass.config_entries.async_update_entry(entry, title="Container Cleaning")
 
+    await _async_migrate_device_names(hass, entry)
     await _async_migrate_broken_entity_names(hass, entry)
 
     merged_config = {**entry.data, **entry.options}

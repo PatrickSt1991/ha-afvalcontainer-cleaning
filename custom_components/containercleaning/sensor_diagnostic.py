@@ -53,11 +53,12 @@ class LastServerUpdateSensor(CoordinatorEntity, SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return device metadata grouped with other integration sensors."""
+        provider_name = _provider_display_name(self._collector)
         return DeviceInfo(
             identifiers={(DOMAIN, self._device_key)},
-            name=_provider_display_name(self._collector),
+            name=provider_name,
             manufacturer="Container Cleaning",
-            model=self._collector or "cleanprofs",
+            model=provider_name,
         )
 
     @property
