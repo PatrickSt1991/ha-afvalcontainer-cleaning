@@ -5,10 +5,7 @@ from ..const.const import (
     SENSOR_COLLECTORS_CLEANPROFS
 )
 
-try:
-    from . import cleanprofs
-except ImportError as err:
-    _LOGGER.error(f"Import error {err.args}")
+from . import cleanprofs
 
 class MainCollector:
     """
@@ -18,24 +15,18 @@ class MainCollector:
     def __init__(
         self,
         provider: str,
-        postal_code: str,
-        street_number: str,
-        suffix: str,
+        address: dict,
         exclude_pickup_today,
-        date_isoformat,
         exclude_list: str,
-        default_label: str,
     ):
         # Normalize input parameters
         self.provider = str(provider).strip().lower()
-        self.postal_code = str(postal_code).strip().upper()
-        self.street_number = str(street_number).strip()
-        self.suffix = str(suffix).strip().lower()
+        self.postal_code = str(address.get("postal_code", "")).strip().upper()
+        self.street_number = str(address.get("street_number", "")).strip()
+        self.suffix = str(address.get("suffix", "")).strip().lower()
 
         self.exclude_pickup_today = normalize_bool_param(exclude_pickup_today)
-        self.date_isoformat = normalize_bool_param(date_isoformat)
         self.exclude_list = str(exclude_list).strip().lower()
-        self.default_label = str(default_label).strip()
 
         waste_data_raw = self._get_waste_data_raw()
 
@@ -50,7 +41,6 @@ class MainCollector:
             waste_data_raw,
             self.exclude_pickup_today,
             self.exclude_list,
-            self.default_label,
         )
 
     def _get_waste_data_raw(self):

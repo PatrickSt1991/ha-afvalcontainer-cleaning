@@ -7,7 +7,7 @@ class WasteItem(TypedDict):
     date: datetime
 
 class DaySensorData:
-    def __init__(self, waste_data_formatted: List[WasteItem], default_label: str):
+    def __init__(self, waste_data_formatted: List[WasteItem]):
         today = datetime.now().strftime("%d-%m-%Y")
 
         self.waste_data_formatted = sorted(
@@ -16,7 +16,6 @@ class DaySensorData:
         self.today_date = datetime.strptime(today, "%d-%m-%Y")
         self.tomorrow_date = self.today_date + timedelta(days=1)
         self.day_after_tomorrow_date = self.today_date + timedelta(days=2)
-        self.default_label = default_label
 
         self.waste_data_today = self.__gen_day_sensor(self.today_date)
         self.waste_data_tomorrow = self.__gen_day_sensor(self.tomorrow_date)
@@ -32,8 +31,6 @@ class DaySensorData:
                 for waste in self.waste_data_formatted
                 if waste["date"] == date
             )
-            if not day:
-                day.append(self.default_label)
         except Exception as err:
             _LOGGER.warning("Could not generate day sensor for date %s: %s", date, err)
         return day
@@ -41,9 +38,9 @@ class DaySensorData:
     def _gen_day_sensor_data(self):
         day_sensor = {}
         try:
-            day_sensor["today"] = ", ".join(self.waste_data_today)
-            day_sensor["tomorrow"] = ", ".join(self.waste_data_tomorrow)
-            day_sensor["day_after_tomorrow"] = ", ".join(self.waste_data_dot)
+            day_sensor["today"] = ", ".join(self.waste_data_today) if self.waste_data_today else None
+            day_sensor["tomorrow"] = ", ".join(self.waste_data_tomorrow) if self.waste_data_tomorrow else None
+            day_sensor["day_after_tomorrow"] = ", ".join(self.waste_data_dot) if self.waste_data_dot else None
             _LOGGER.debug("Day sensors — today: %s, tomorrow: %s, day after: %s",
                 day_sensor["today"], day_sensor["tomorrow"], day_sensor["day_after_tomorrow"])
         except Exception as err:

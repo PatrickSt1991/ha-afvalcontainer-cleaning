@@ -12,7 +12,6 @@
           "suffix": "Address suffix",
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
-          "default_label": "Default label when no data is available",
           "exclude_list": "Container type exclude list"
         }
       }
@@ -33,7 +32,6 @@
         "data": {
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
-          "default_label": "Default label when no data is available",
           "exclude_list": "Container type exclude list"
         }
       }

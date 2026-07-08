@@ -11,7 +11,6 @@
           "suffix": "Huisnummer toevoeging",
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
-          "default_label": "Standaard label bij geen datum bekend",
           "exclude_list": "Containertype uitsluiten"
         }
       }
@@ -32,7 +31,6 @@
         "data": {
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
-          "default_label": "Standaard label bij geen datum bekend",
           "exclude_list": "Containertype uitsluiten"
         }
       }

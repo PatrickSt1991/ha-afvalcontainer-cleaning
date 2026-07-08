@@ -5,7 +5,6 @@ from homeassistant.components.sensor import PLATFORM_SCHEMA
 from .const.const import (
     _LOGGER,
     CONF_COLLECTOR,
-    CONF_DEFAULT_LABEL,
     CONF_EXCLUDE_LIST,
     CONF_EXCLUDE_PICKUP_TODAY,
     CONF_DATE_ISOFORMAT,
@@ -28,7 +27,6 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_EXCLUDE_PICKUP_TODAY, default=True): cv.boolean,
         vol.Optional(CONF_DATE_ISOFORMAT, default=False): cv.boolean,
         vol.Optional(CONF_EXCLUDE_LIST, default=""): cv.string,
-        vol.Optional(CONF_DEFAULT_LABEL, default="geen"): cv.string,
         vol.Optional(CONF_ID, default=""): cv.string,
     }
 )

@@ -12,7 +12,6 @@ from .const.const import (
     CONF_SUFFIX,
     CONF_EXCLUDE_PICKUP_TODAY,
     CONF_DATE_ISOFORMAT,
-    CONF_DEFAULT_LABEL,
     CONF_EXCLUDE_LIST,
     SENSOR_COLLECTORS_CLEANPROFS,
 )
@@ -31,7 +30,6 @@ DATA_SCHEMA = vol.Schema({
     vol.Optional(CONF_SUFFIX, default=""): cv.string,
     vol.Optional(CONF_EXCLUDE_PICKUP_TODAY, default=True): cv.boolean,
     vol.Optional(CONF_DATE_ISOFORMAT, default=False): cv.boolean,
-    vol.Optional(CONF_DEFAULT_LABEL, default="geen"): cv.string,
     vol.Optional(CONF_EXCLUDE_LIST, default=""): cv.string,
 })
 

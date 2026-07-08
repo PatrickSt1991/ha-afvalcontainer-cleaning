@@ -19,8 +19,6 @@ from ..collector.collector import MainCollector
 # Common
 suffix = ""
 exclude_pickup_today = "True"
-date_isoformat = "True"
-default_label = "geen"
 exclude_list = ""
 
 # CleanProfs
@@ -32,27 +30,28 @@ street_number = "5"
 
 collector = MainCollector(
     provider,
-    postal_code,
-    street_number,
-    suffix,
+    {
+        "postal_code": postal_code,
+        "street_number": street_number,
+        "suffix": suffix,
+    },
     exclude_pickup_today,
-    date_isoformat,
     exclude_list,
-    default_label,
 )
 
 # MainCollector(
 #     provider,
-#     postal_code,
-#     street_number,
-#     suffix,
+#     {
+#         "postal_code": postal_code,
+#         "street_number": street_number,
+#         "suffix": suffix,
+#     },
 #     exclude_pickup_today,
 #     exclude_list,
-#     default_label,
 # )
 
-# data = XimmioCollector().get_waste_data_provider("meerlanden", postal_code2, street_number2, suffix, default_label, exclude_list)
-# data2 = MijnAfvalWijzerCollector().get_waste_data_provider("mijnafvalwijzer", postal_code, street_number, suffix, default_label, exclude_list)
+# data = XimmioCollector().get_waste_data_provider("meerlanden", postal_code2, street_number2, suffix, exclude_list)
+# data2 = MijnAfvalWijzerCollector().get_waste_data_provider("mijnafvalwijzer", postal_code, street_number, suffix, exclude_list)
 
 
 #########################################################################################################

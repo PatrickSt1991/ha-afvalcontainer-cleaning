@@ -5,39 +5,36 @@ from datetime import datetime, date, timedelta
 import hashlib
 
 from .const.const import (
-    _LOGGER,
     ATTR_DAYS_UNTIL_COLLECTION_DATE,
     ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW,
     ATTR_IS_COLLECTION_DATE_TODAY,
     ATTR_IS_COLLECTION_DATE_TOMORROW,
-    ATTR_LAST_UPDATE,
-    CONF_DEFAULT_LABEL,
     CONF_EXCLUDE_PICKUP_TODAY,
-    CONF_ID,
     CONF_COLLECTOR,
     CONF_POSTAL_CODE,
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
     CONF_DATE_ISOFORMAT,
     SENSOR_ICON,
-    SENSOR_PREFIX,
 )
 
 
 class ProviderSensor(CoordinatorEntity, SensorEntity):
     """Representation of a provider-based waste sensor."""
 
+    _attr_has_entity_name = True
+    _attr_name = None
+
     def __init__(self, coordinator, waste_type, config):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self.waste_type = waste_type
         self.config = config
-        self._id_name = config.get(CONF_ID)
-        self._default_label = config.get(CONF_DEFAULT_LABEL)
         self._exclude_pickup_today = str(config.get(CONF_EXCLUDE_PICKUP_TODAY)).lower()
-        self._name = (SENSOR_PREFIX + (f"{self._id_name} " if self._id_name else "")) + waste_type
         self._date_isoformat = str(config.get(CONF_DATE_ISOFORMAT)).lower()
         self._icon = SENSOR_ICON
+        key = self.waste_type.replace("-", "_").replace(" ", "_")
+        self._attr_translation_key = f"provider_{key}"
         self._unique_id = hashlib.sha1(
             (
                 f"{waste_type}{config.get(CONF_ID)}{config.get(CONF_COLLECTOR)}"
@@ -45,12 +42,6 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
                 f"{config.get(CONF_SUFFIX, '')}"
             ).encode("utf-8")
         ).hexdigest()
-
-    @property
-    def translation_key(self) -> str:
-        """Return the translation key for the sensor, based on waste type."""
-        key = self.waste_type.replace("-", "_").replace(" ", "_")
-        return f"provider_{key}"
 
     @property
     def unique_id(self):
@@ -74,7 +65,7 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         """Return the state of the sensor."""
         collection_date = self._get_collection_date()
         if collection_date is None:
-            return self._default_label
+            return None
         if isinstance(collection_date, datetime):
             if self._date_isoformat in ("true", "yes"):
                 return collection_date.isoformat()

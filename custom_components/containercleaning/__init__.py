@@ -14,9 +14,7 @@ from .const.const import (
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
     CONF_EXCLUDE_PICKUP_TODAY,
-    CONF_DATE_ISOFORMAT,
     CONF_EXCLUDE_LIST,
-    CONF_DEFAULT_LABEL,
     SCAN_INTERVAL,
 )
 
@@ -49,13 +47,13 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
     def _fetch(self) -> dict:
         collector = MainCollector(
             self.config.get(CONF_COLLECTOR),
-            self.config.get(CONF_POSTAL_CODE),
-            self.config.get(CONF_STREET_NUMBER),
-            self.config.get(CONF_SUFFIX),
+            {
+                CONF_POSTAL_CODE: self.config.get(CONF_POSTAL_CODE),
+                CONF_STREET_NUMBER: self.config.get(CONF_STREET_NUMBER),
+                CONF_SUFFIX: self.config.get(CONF_SUFFIX),
+            },
             self.config.get(CONF_EXCLUDE_PICKUP_TODAY),
-            self.config.get(CONF_DATE_ISOFORMAT),
             self.config.get(CONF_EXCLUDE_LIST),
-            self.config.get(CONF_DEFAULT_LABEL),
         )
         return {
             "waste_data_with_today": collector.waste_data_with_today,

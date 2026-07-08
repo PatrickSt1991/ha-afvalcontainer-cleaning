@@ -20,7 +20,6 @@ class WasteDataTransformer(object):
         waste_data_raw,
         exclude_pickup_today,
         exclude_list,
-        default_label,
     ):
         if not isinstance(waste_data_raw, list):
             raise ValueError(
@@ -30,7 +29,6 @@ class WasteDataTransformer(object):
         self.waste_data_raw = waste_data_raw
         self.exclude_pickup_today = exclude_pickup_today
         self.exclude_list = exclude_list.strip().lower()
-        self.default_label = default_label
 
         TODAY = datetime.now().strftime("%d-%m-%Y")
         self.DATE_TODAY = datetime.strptime(TODAY, "%d-%m-%Y")
@@ -82,9 +80,9 @@ class WasteDataTransformer(object):
                     item_name = item["type"].strip().lower()
                     if item_name not in self.exclude_list:
                         if item_name not in waste_data_with_today.keys():
-                            waste_data_with_today[item_name] = self.default_label
+                            waste_data_with_today[item_name] = None
                         if item_name not in waste_data_without_today.keys():
-                            waste_data_without_today[item_name] = self.default_label
+                            waste_data_without_today[item_name] = None
             except Exception as err:
                 _LOGGER.warning("Unexpected error applying default labels: %s", err)
 
@@ -129,7 +127,7 @@ class WasteDataTransformer(object):
         except Exception as err:
             _LOGGER.warning("Failed to format waste data: %s", err)
 
-        days = DaySensorData(waste_data_formatted, self.default_label)
+        days = DaySensorData(waste_data_formatted)
 
         try:
             waste_data_after_date_selected = list(
@@ -140,7 +138,7 @@ class WasteDataTransformer(object):
         except Exception as err:
             _LOGGER.warning("Failed to filter waste data by date: %s", err)
 
-        next_data = NextSensorData(waste_data_after_date_selected, self.default_label)
+        next_data = NextSensorData(waste_data_after_date_selected)
 
         try:
             waste_data_custom = {**next_data.next_sensor_data, **days.day_sensor_data}

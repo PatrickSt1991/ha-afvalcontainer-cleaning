@@ -66,6 +66,8 @@ You can configure the integration either via the **UI** (recommended) or with `c
 2. Click **Add Integration**.  
 3. Search for **Container Cleaning** and follow the setup wizard.  
 
+When no cleaning date is available, sensors no longer use a custom fallback label. Home Assistant now shows its built-in translated unknown/unavailable state.
+
 
 ---
 
