@@ -38,7 +38,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
     if coordinator.data is None:
-        _LOGGER.error("No data available from coordinator; sensors cannot be created.")
+        _LOGGER.warning("No data available from coordinator; sensors cannot be created.")
         return
 
     waste_types_provider = set(coordinator.data["waste_data_with_today"].keys())
@@ -55,7 +55,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     ]
 
     if not entities:
-        _LOGGER.error("No entities created; check configuration or collector output.")
+        _LOGGER.warning("No entities created; check configuration or collector output.")
         return
 
     _LOGGER.debug("Adding %d sensors for Container Cleaning", len(entities))

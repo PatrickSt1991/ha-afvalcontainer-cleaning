@@ -26,6 +26,11 @@ This integration adds **sensors** to Home Assistant that track cleaning services
 - Includes a diagnostic sensor for the last successful server update timestamp.
 - Uses a clear integration title (`Container Cleaning`) and provider-based device names (for example `CleanProfs`).
 - Lets you configure the server poll interval from integration settings (1-24 hours).
+- Uses privacy-conscious logging (no address details in normal logs) and warning-level messages for expected provider fetch issues.
+- Enforces HTTPS/TLS certificate validation for provider API requests.
+- Uses exact comma-separated exclude matching (for example `paper,plastic`) to reduce false matches and processing overhead.
+- Reuses a persistent HTTP session for provider polling to reduce connection setup overhead.
+- Parses provider dates once and carries datetime values through transformation to avoid repeated parsing work.
 - Built with inspiration from [@xirixiz/homeassistant-afvalwijzer](https://github.com/xirixiz/homeassistant-afvalwijzer), but focused on **cleaning services** instead of **garbage collection**.
 
 ---

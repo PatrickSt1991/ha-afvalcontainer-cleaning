@@ -8,6 +8,7 @@ from datetime import timedelta
 from datetime import datetime, timezone
 
 from .collector.collector import MainCollector
+from .collector import cleanprofs
 from .const.const import (
     DOMAIN,
     _LOGGER,
@@ -168,6 +169,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_unload(entry, "sensor")
     hass.data[DOMAIN].pop(entry.entry_id, None)
+
+    if not hass.data[DOMAIN]:
+        cleanprofs.close_session()
+
     return True
 
 

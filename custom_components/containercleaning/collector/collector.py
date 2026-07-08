@@ -55,7 +55,7 @@ class MainCollector:
             for sensor_set, getter in common_providers:
                 keys = sensor_set.keys() if isinstance(sensor_set, dict) else sensor_set
                 if self.provider in keys:
-                    _LOGGER.debug("Using provider '%s' for %s %s", self.provider, self.postal_code, self.street_number)
+                    _LOGGER.debug("Using provider '%s'", self.provider)
                     return getter(self.provider, self.postal_code, self.street_number, self.suffix)
 
             _LOGGER.error("Unknown provider '%s' — check your integration configuration", self.provider)

@@ -1,11 +1,9 @@
 from ..const.const import _LOGGER, SENSOR_COLLECTORS_CLEANPROFS
 from ..common.main_functions import waste_type_rename
+from datetime import datetime
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import urllib3
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def _make_session() -> requests.Session:
@@ -24,37 +22,54 @@ def _make_session() -> requests.Session:
     return session
 
 
+_SESSION: requests.Session | None = None
+
+
+def _get_session() -> requests.Session:
+    """Return a lazily initialized shared HTTP session."""
+    global _SESSION
+    if _SESSION is None:
+        _SESSION = _make_session()
+    return _SESSION
+
+
+def close_session() -> None:
+    """Close and clear the shared HTTP session."""
+    global _SESSION
+    if _SESSION is not None:
+        _SESSION.close()
+        _SESSION = None
+
+
 def get_waste_data_raw(provider, postal_code, street_number, suffix):
     if provider not in SENSOR_COLLECTORS_CLEANPROFS:
         raise ValueError(f"Invalid provider: {provider}, please verify")
 
-    session = _make_session()
+    session = _get_session()
     try:
         url = SENSOR_COLLECTORS_CLEANPROFS[provider].format(postal_code, street_number, suffix)
-        _LOGGER.debug("Requesting cleaning schedule from %s", url)
-        raw_response = session.get(url, timeout=15, verify=False)
+        _LOGGER.debug("Requesting cleaning schedule from provider '%s'", provider)
+        raw_response = session.get(url, timeout=15)
 
         if not raw_response.ok:
-            raise ValueError(f"Endpoint {url} returned status {raw_response.status_code}")
+            raise ValueError(f"Provider endpoint returned status {raw_response.status_code}")
 
         try:
             response = raw_response.json()
         except ValueError as err:
-            raise ValueError(f"Invalid and/or no JSON data received from {url}") from err
+            raise ValueError("Invalid and/or no JSON data received from provider") from err
 
         if response == []:
-            raise ValueError(f"Endpoint {url} returned an empty array, no data available for {postal_code} {street_number} {suffix}")
+            raise ValueError("Provider returned an empty array, no cleaning data available")
 
         _LOGGER.debug("Received %d raw records from provider", len(response))
 
     except requests.exceptions.RequestException as err:
-        _LOGGER.error("Network error fetching data from API (all retries exhausted): %s", err)
+        _LOGGER.warning("Network error fetching data from provider API (all retries exhausted): %s", err)
         return False
     except ValueError as err:
-        _LOGGER.error("Data error from API: %s", err)
+        _LOGGER.warning("Data error from provider API: %s", err)
         return False
-    finally:
-        session.close()
 
     waste_data_raw = []
     try:
@@ -64,10 +79,12 @@ def get_waste_data_raw(provider, postal_code, street_number, suffix):
             waste_type = waste_type_rename(item['product_name'].strip().lower())
             if not waste_type:
                 continue
-            waste_data_raw.append({"type": waste_type, "date": item['full_date']})
 
-    except Exception as exc:
-        _LOGGER.warning("Error occurred while processing raw API data: %r", exc)
+            parsed_date = datetime.strptime(item["full_date"], "%Y-%m-%d")
+            waste_data_raw.append({"type": waste_type, "date": parsed_date})
+
+    except Exception:
+        _LOGGER.exception("Unexpected error while processing raw API data")
         return False
 
     _LOGGER.debug("Parsed %d cleaning schedule entries", len(waste_data_raw))
