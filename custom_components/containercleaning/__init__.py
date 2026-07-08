@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -47,14 +45,14 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
 
     def _fetch(self) -> dict:
         collector = MainCollector(
-            self.config.get(CONF_COLLECTOR),
+            str(self.config.get(CONF_COLLECTOR, "")),
             {
                 CONF_POSTAL_CODE: self.config.get(CONF_POSTAL_CODE),
                 CONF_STREET_NUMBER: self.config.get(CONF_STREET_NUMBER),
                 CONF_SUFFIX: self.config.get(CONF_SUFFIX),
             },
             self.config.get(CONF_EXCLUDE_PICKUP_TODAY),
-            self.config.get(CONF_EXCLUDE_LIST),
+            str(self.config.get(CONF_EXCLUDE_LIST, "")),
         )
         return {
             "waste_data_with_today": collector.waste_data_with_today,
@@ -68,8 +66,20 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
+def _is_broken_or_generic_sensor_name(custom_name: str | None, original_name: str | None) -> bool:
+    """Return True if an entity name is missing/blank or stuck on generic fallback."""
+    if custom_name is None and original_name is None:
+        return True
+
+    normalized_custom_name = custom_name.strip().casefold() if isinstance(custom_name, str) else ""
+    normalized_original_name = original_name.strip().casefold() if isinstance(original_name, str) else ""
+    bad_names = {"", "container cleaning"}
+
+    return normalized_custom_name in bad_names or normalized_original_name in bad_names
+
+
 async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Remove broken nameless entity registry entries so HA can recreate them correctly."""
+    """Remove broken/generic entity registry entries so HA can recreate them correctly."""
     registry = er.async_get(hass)
     registry_entries = er.async_entries_for_config_entry(registry, entry.entry_id)
 
@@ -78,12 +88,10 @@ async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigE
         if registry_entry.domain != "sensor" or registry_entry.platform != DOMAIN:
             continue
 
-        custom_name = registry_entry.name
-        original_name = registry_entry.original_name
-        has_no_name = custom_name is None and original_name is None
-        has_blank_name = isinstance(custom_name, str) and not custom_name.strip()
-
-        if has_no_name or has_blank_name:
+        if _is_broken_or_generic_sensor_name(
+            registry_entry.name,
+            registry_entry.original_name,
+        ):
             registry.async_remove(registry_entry.entity_id)
             removed += 1
 

@@ -22,11 +22,18 @@ from .const.const import (
 )
 
 
+def _format_sensor_name(raw_value: str) -> str:
+    """Return a human-friendly fallback name for sensors."""
+    acronyms = {"gft", "pmd"}
+    parts = raw_value.replace("-", " ").replace("_", " ").split()
+    formatted = [part.upper() if part.casefold() in acronyms else part.capitalize() for part in parts]
+    return " ".join(formatted)
+
+
 class ProviderSensor(CoordinatorEntity, SensorEntity):
     """Representation of a provider-based waste sensor."""
 
     _attr_has_entity_name = True
-    _attr_name = None
 
     def __init__(self, coordinator, waste_type, config):
         """Initialize the sensor."""
@@ -43,6 +50,7 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         self._icon = SENSOR_ICON
         key = self.waste_type.replace("-", "_").replace(" ", "_")
         self._attr_translation_key = f"provider_{key}"
+        self._attr_name = _format_sensor_name(key)
         self._unique_id = hashlib.sha1(
             (
                 f"{waste_type}{config.get(CONF_ID)}{config.get(CONF_COLLECTOR)}"
