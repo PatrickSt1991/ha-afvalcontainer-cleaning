@@ -9,7 +9,7 @@
           "provider": "Provider",
           "postal_code": "Postal code",
           "street_number": "House number",
-          "suffix": "Street Name",
+          "suffix": "Street name",
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
           "exclude_list": "Container type exclude list"

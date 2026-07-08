@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.helpers.translation import async_get_cached_translations
 from datetime import datetime, date, timedelta
 import hashlib
 
@@ -17,13 +16,15 @@ from .const.const import (
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
     CONF_DATE_ISOFORMAT,
-    DOMAIN,
     SENSOR_ICON,
 )
 
 
 class ProviderSensor(CoordinatorEntity, SensorEntity):
     """Representation of a provider-based waste sensor."""
+
+    _attr_has_entity_name = True
+    _attr_name = None
 
     def __init__(self, coordinator, waste_type, config):
         """Initialize the sensor."""
@@ -35,7 +36,6 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         self._icon = SENSOR_ICON
         key = self.waste_type.replace("-", "_").replace(" ", "_")
         self._attr_translation_key = f"provider_{key}"
-        self._attr_name = self.waste_type.replace("_", " ").replace("-", " ")
         self._unique_id = hashlib.sha1(
             (
                 f"{waste_type}{config.get(CONF_ID)}{config.get(CONF_COLLECTOR)}"
@@ -43,21 +43,6 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
                 f"{config.get(CONF_SUFFIX, '')}"
             ).encode("utf-8")
         ).hexdigest()
-
-    async def async_added_to_hass(self) -> None:
-        """Resolve translated name for the current Home Assistant language."""
-        await super().async_added_to_hass()
-        translations = await async_get_cached_translations(
-            self.hass,
-            self.hass.config.language,
-            "entity",
-            DOMAIN,
-        )
-        key = f"component.{DOMAIN}.entity.sensor.{self._attr_translation_key}.name"
-        translated_name = translations.get(key)
-        if translated_name:
-            self._attr_name = translated_name
-            self.async_write_ha_state()
 
     @property
     def unique_id(self):
