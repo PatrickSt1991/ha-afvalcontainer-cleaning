@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from datetime import datetime, date, timedelta
 import hashlib
@@ -16,6 +17,7 @@ from .const.const import (
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
     CONF_DATE_ISOFORMAT,
+    DOMAIN,
     SENSOR_ICON,
 )
 
@@ -31,6 +33,11 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         super().__init__(coordinator)
         self.waste_type = waste_type
         self.config = config
+        self._collector = str(config.get(CONF_COLLECTOR, "")).strip().lower()
+        self._postal_code = str(config.get(CONF_POSTAL_CODE, "")).strip().upper()
+        self._street_number = str(config.get(CONF_STREET_NUMBER, "")).strip()
+        self._suffix = str(config.get(CONF_SUFFIX, "")).strip().lower()
+        self._device_key = f"{self._collector}:{self._postal_code}:{self._street_number}:{self._suffix}"
         self._exclude_pickup_today = str(config.get(CONF_EXCLUDE_PICKUP_TODAY)).lower()
         self._date_isoformat = str(config.get(CONF_DATE_ISOFORMAT)).lower()
         self._icon = SENSOR_ICON
@@ -53,6 +60,16 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
     def icon(self):
         """Return the icon of the sensor."""
         return self._icon
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return device metadata so translated entity naming resolves correctly."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._device_key)},
+            name="Container Cleaning",
+            manufacturer="Container Cleaning",
+            model=self._collector or "cleanprofs",
+        )
 
     @property
     def device_class(self):
