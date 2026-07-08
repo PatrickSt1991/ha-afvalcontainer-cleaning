@@ -4,6 +4,7 @@ from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from datetime import timedelta
+from datetime import datetime, timezone
 
 from .collector.collector import MainCollector
 from .const.const import (
@@ -38,6 +39,7 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
         _LOGGER.debug("Fetching container cleaning data from provider")
         try:
             data = await self.hass.async_add_executor_job(self._fetch)
+            data["last_server_update"] = datetime.now(timezone.utc)
             _LOGGER.debug(
                 "Fetched %d provider waste types and %d custom sensors",
                 len(data["waste_data_with_today"]),

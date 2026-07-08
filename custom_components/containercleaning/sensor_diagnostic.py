@@ -63,4 +63,6 @@ class LastServerUpdateSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the last successful coordinator update time."""
-        return self.coordinator.last_update_success_time
+        if self.coordinator.data is None:
+            return None
+        return self.coordinator.data.get("last_server_update")

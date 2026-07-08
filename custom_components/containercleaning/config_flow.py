@@ -1,7 +1,6 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.helpers import config_validation as cv
-import logging
 
 from .const.const import (
     DOMAIN,
@@ -34,9 +33,6 @@ DATA_SCHEMA = vol.Schema({
     vol.Optional(CONF_DATE_ISOFORMAT, default=False): cv.boolean,
     vol.Optional(CONF_EXCLUDE_LIST, default=""): cv.string,
 })
-
-_LOGGER = logging.getLogger(__name__)
-
 class ContainerCleaningConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
@@ -81,7 +77,7 @@ class ContainerCleaningOptionsFlow(config_entries.OptionsFlow):
     """Handle Container Cleaning options."""
 
     def __init__(self, config_entry):
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
         if user_input is not None:
@@ -91,28 +87,28 @@ class ContainerCleaningOptionsFlow(config_entries.OptionsFlow):
             {
                 vol.Optional(
                     CONF_EXCLUDE_PICKUP_TODAY,
-                    default=self.config_entry.options.get(
+                    default=self._config_entry.options.get(
                         CONF_EXCLUDE_PICKUP_TODAY,
-                        self.config_entry.data.get(CONF_EXCLUDE_PICKUP_TODAY, True),
+                        self._config_entry.data.get(CONF_EXCLUDE_PICKUP_TODAY, True),
                     ),
                 ): cv.boolean,
                 vol.Optional(
                     CONF_DATE_ISOFORMAT,
-                    default=self.config_entry.options.get(
+                    default=self._config_entry.options.get(
                         CONF_DATE_ISOFORMAT,
-                        self.config_entry.data.get(CONF_DATE_ISOFORMAT, False),
+                        self._config_entry.data.get(CONF_DATE_ISOFORMAT, False),
                     ),
                 ): cv.boolean,
                 vol.Optional(
                     CONF_EXCLUDE_LIST,
-                    default=self.config_entry.options.get(
+                    default=self._config_entry.options.get(
                         CONF_EXCLUDE_LIST,
-                        self.config_entry.data.get(CONF_EXCLUDE_LIST, ""),
+                        self._config_entry.data.get(CONF_EXCLUDE_LIST, ""),
                     ),
                 ): cv.string,
                 vol.Optional(
                     CONF_POLL_INTERVAL_HOURS,
-                    default=self.config_entry.options.get(
+                    default=self._config_entry.options.get(
                         CONF_POLL_INTERVAL_HOURS,
                         DEFAULT_POLL_INTERVAL_HOURS,
                     ),
