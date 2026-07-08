@@ -30,6 +30,41 @@ def _format_sensor_name(raw_value: str) -> str:
     return " ".join(formatted)
 
 
+def _provider_icon_for_waste_type(waste_type: str) -> str:
+    """Return a context-aware icon for provider waste types."""
+    icon_map = {
+        "best_tas": "mdi:shopping",
+        "chemisch": "mdi:flask-outline",
+        "gft": "mdi:leaf",
+        "glas": "mdi:glass-fragile",
+        "grofvuil": "mdi:sofa-outline",
+        "kerstbomen": "mdi:pine-tree",
+        "papier": "mdi:newspaper-variant-outline",
+        "plastic": "mdi:bottle-soda-classic-outline",
+        "pmd": "mdi:recycle",
+        "pmd_restafval": "mdi:trash-can-outline",
+        "restafval": "mdi:trash-can-outline",
+        "restafvalzakken": "mdi:bag-personal-outline",
+        "restwagen": "mdi:truck-outline",
+        "snoeiafval": "mdi:leaf-maple",
+        "takken": "mdi:tree-outline",
+        "textiel": "mdi:tshirt-crew-outline",
+        "tuinafval": "mdi:flower-outline",
+    }
+    return icon_map.get(waste_type, SENSOR_ICON)
+
+
+def _provider_display_name(provider: str) -> str:
+    """Return a human-friendly provider display name."""
+    mapping = {
+        "cleanprofs": "CleanProfs",
+    }
+    provider_key = provider.strip().lower()
+    if provider_key in mapping:
+        return mapping[provider_key]
+    return provider.strip().title() if provider.strip() else "Container Cleaning"
+
+
 class ProviderSensor(CoordinatorEntity, SensorEntity):
     """Representation of a provider-based waste sensor."""
 
@@ -47,7 +82,7 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         self._device_key = f"{self._collector}:{self._postal_code}:{self._street_number}:{self._suffix}"
         self._exclude_pickup_today = str(config.get(CONF_EXCLUDE_PICKUP_TODAY)).lower()
         self._date_isoformat = str(config.get(CONF_DATE_ISOFORMAT)).lower()
-        self._icon = SENSOR_ICON
+        self._icon = _provider_icon_for_waste_type(self.waste_type)
         key = self.waste_type.replace("-", "_").replace(" ", "_")
         self._attr_translation_key = f"provider_{key}"
         self._attr_name = _format_sensor_name(key)
@@ -74,7 +109,7 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
         """Return device metadata so translated entity naming resolves correctly."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._device_key)},
-            name="Container Cleaning",
+            name=_provider_display_name(self._collector),
             manufacturer="Container Cleaning",
             model=self._collector or "cleanprofs",
         )

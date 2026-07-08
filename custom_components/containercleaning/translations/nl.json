@@ -31,7 +31,8 @@
         "data": {
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
-          "exclude_list": "Containertype uitsluiten"
+          "exclude_list": "Containertype uitsluiten",
+          "poll_interval_hours": "Poll-interval (uren)"
         }
       }
     }
@@ -210,6 +211,9 @@
       },
       "custom_today": {
         "name": "Vandaag",
+        "state": {
+          "no_collection": "Geen reiniging"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
           "last_update": { "name": "Laatste update" }
@@ -217,6 +221,9 @@
       },
       "custom_tomorrow": {
         "name": "Morgen",
+        "state": {
+          "no_collection": "Geen reiniging"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
           "last_update": { "name": "Laatste update" }
@@ -224,6 +231,9 @@
       },
       "custom_day_after_tomorrow": {
         "name": "Overmorgen",
+        "state": {
+          "no_collection": "Geen reiniging"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Dagen tot reinigingsdatum" },
           "last_update": { "name": "Laatste update" }
@@ -244,9 +254,15 @@
       },
       "custom_next_type": {
         "name": "Volgend containertype",
+        "state": {
+          "no_collection": "Geen reiniging"
+        },
         "state_attributes": {
           "last_update": { "name": "Laatste update" }
         }
+      },
+      "diagnostic_last_server_update": {
+        "name": "Laatste serverupdate"
       }
     }
   }

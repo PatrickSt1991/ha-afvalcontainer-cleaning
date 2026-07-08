@@ -15,6 +15,7 @@ from .const.const import (
     DOMAIN,
 )
 from .sensor_custom import CustomSensor
+from .sensor_diagnostic import LastServerUpdateSensor
 from .sensor_provider import ProviderSensor
 
 
@@ -49,6 +50,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     ] + [
         CustomSensor(coordinator, waste_type, entry.data)
         for waste_type in waste_types_custom
+    ] + [
+        LastServerUpdateSensor(coordinator, entry.data)
     ]
 
     if not entities:

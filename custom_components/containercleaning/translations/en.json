@@ -32,7 +32,8 @@
         "data": {
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
-          "exclude_list": "Container type exclude list"
+          "exclude_list": "Container type exclude list",
+          "poll_interval_hours": "Poll interval (hours)"
         }
       }
     }
@@ -211,6 +212,9 @@
       },
       "custom_today": {
         "name": "Today",
+        "state": {
+          "no_collection": "No Cleaning Due"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Days until cleaning date" },
           "last_update": { "name": "Last update" }
@@ -218,6 +222,9 @@
       },
       "custom_tomorrow": {
         "name": "Tomorrow",
+        "state": {
+          "no_collection": "No Cleaning Due"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Days until cleaning date" },
           "last_update": { "name": "Last update" }
@@ -225,6 +232,9 @@
       },
       "custom_day_after_tomorrow": {
         "name": "Day After Tomorrow",
+        "state": {
+          "no_collection": "No Cleaning Due"
+        },
         "state_attributes": {
           "days_until_collection_date": { "name": "Days until cleaning date" },
           "last_update": { "name": "Last update" }
@@ -245,9 +255,15 @@
       },
       "custom_next_type": {
         "name": "Next Container Type",
+        "state": {
+          "no_collection": "No Cleaning Due"
+        },
         "state_attributes": {
           "last_update": { "name": "Last update" }
         }
+      },
+      "diagnostic_last_server_update": {
+        "name": "Last Server Update"
       }
     }
   }

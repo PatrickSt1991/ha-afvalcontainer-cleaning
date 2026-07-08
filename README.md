@@ -22,6 +22,10 @@ This integration adds **sensors** to Home Assistant that track cleaning services
 - Adds `sensor.cleaningcontainer_*` entities in Home Assistant.  
 - Tracks upcoming container cleaning schedules.  
 - Supports multiple providers (see below).  
+- Uses context-aware icons for provider and summary sensors to improve dashboard readability.
+- Includes a diagnostic sensor for the last successful server update timestamp.
+- Uses a clear integration title (`Container Cleaning`) and provider-based device names (for example `CleanProfs`).
+- Lets you configure the server poll interval from integration settings (1-24 hours).
 - Built with inspiration from [@xirixiz/homeassistant-afvalwijzer](https://github.com/xirixiz/homeassistant-afvalwijzer), but focused on **cleaning services** instead of **garbage collection**.
 
 ---

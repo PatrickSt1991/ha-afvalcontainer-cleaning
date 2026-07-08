@@ -3,6 +3,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from datetime import timedelta
 
 from .collector.collector import MainCollector
 from .const.const import (
@@ -14,6 +15,8 @@ from .const.const import (
     CONF_SUFFIX,
     CONF_EXCLUDE_PICKUP_TODAY,
     CONF_EXCLUDE_LIST,
+    CONF_POLL_INTERVAL_HOURS,
+    DEFAULT_POLL_INTERVAL_HOURS,
     SCAN_INTERVAL,
 )
 
@@ -22,11 +25,12 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
     """Coordinator that fetches all container cleaning data once per interval."""
 
     def __init__(self, hass: HomeAssistant, config: dict) -> None:
+        poll_interval_hours = int(config.get(CONF_POLL_INTERVAL_HOURS, DEFAULT_POLL_INTERVAL_HOURS))
         super().__init__(
             hass,
             _LOGGER,
             name=DOMAIN,
-            update_interval=SCAN_INTERVAL,
+            update_interval=timedelta(hours=poll_interval_hours) if poll_interval_hours > 0 else SCAN_INTERVAL,
         )
         self.config = config
 
@@ -104,13 +108,20 @@ async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigE
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    if entry.title.strip().casefold() in {"", DOMAIN}:
+        hass.config_entries.async_update_entry(entry, title="Container Cleaning")
+
     await _async_migrate_broken_entity_names(hass, entry)
 
-    coordinator = ContainerCleaningCoordinator(hass, entry.data)
+    merged_config = {**entry.data, **entry.options}
+
+    coordinator = ContainerCleaningCoordinator(hass, merged_config)
     await coordinator.async_config_entry_first_refresh()
 
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
+
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
     await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
     return True
@@ -120,3 +131,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_unload(entry, "sensor")
     hass.data[DOMAIN].pop(entry.entry_id, None)
     return True
+
+
+async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload config entry when options change."""
+    await hass.config_entries.async_reload(entry.entry_id)
