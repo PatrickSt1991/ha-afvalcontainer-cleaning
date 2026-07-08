@@ -51,7 +51,7 @@ class ProviderSensor(CoordinatorEntity, SensorEntity):
             self.hass,
             self.hass.config.language,
             "entity",
-            [DOMAIN],
+            DOMAIN,
         )
         key = f"component.{DOMAIN}.entity.sensor.{self._attr_translation_key}.name"
         translated_name = translations.get(key)
