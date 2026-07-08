@@ -8,8 +8,8 @@
         "data": {
           "provider": "Provider",
           "postal_code": "Postal code",
-          "street_number": "Street number",
-          "suffix": "Address suffix",
+          "street_number": "House number",
+          "suffix": "House number suffix",
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
           "exclude_list": "Container type exclude list"
@@ -18,7 +18,7 @@
     },
     "error": {
       "invalid_postal_code": "Invalid postal code format",
-      "invalid_street_number": "Street number must be numeric"
+      "invalid_street_number": "House number must be numeric"
     },
     "abort": {
       "already_configured": "Container Cleaning is already configured"

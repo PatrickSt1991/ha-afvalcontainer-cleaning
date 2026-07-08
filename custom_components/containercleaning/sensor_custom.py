@@ -5,6 +5,7 @@ import hashlib
 
 from .const.const import (
     ATTR_DAYS_UNTIL_COLLECTION_DATE,
+    CONF_ID,
     CONF_COLLECTOR,
     CONF_POSTAL_CODE,
     CONF_STREET_NUMBER,
