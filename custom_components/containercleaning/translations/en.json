@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Configure Container Cleaning",
-        "description": "Set up your container cleaning integration.",
+        "description": "Set up your container cleaning integration.\n\nProvider: Select the data source.\nPostal code: Postal code for the service address.\nHouse number: House number for the service address.\nStreet name: Street name or suffix used by your provider.\nExclude today's cleaning: When enabled, sensors ignore cleaning scheduled for today and show the next cleaning after today.\nUse ISO date format: Show timestamps in ISO format where applicable.\nContainer type exclude list: Comma-separated container types to ignore (for example: gft,pmd).",
         "data": {
           "provider": "Provider",
           "postal_code": "Postal code",
@@ -28,7 +28,7 @@
     "step": {
       "init": {
         "title": "Container Cleaning Options",
-        "description": "Configure options for container cleaning integration.",
+        "description": "Configure options for container cleaning integration.\n\nExclude today's cleaning: When enabled, sensors ignore cleaning scheduled for today and show the next cleaning after today.\nUse ISO date format: Show timestamps in ISO format where applicable.\nContainer type exclude list: Comma-separated container types to ignore (for example: gft,pmd).\nPoll interval (hours): How often data is refreshed from the provider (1-24 hours).",
         "data": {
           "exclude_pickup_today": "Exclude today's cleaning",
           "date_isoformat": "Use ISO date format",
@@ -263,7 +263,7 @@
         }
       },
       "diagnostic_last_server_update": {
-        "name": "Last Server Update"
+        "name": "Last Data Retrieval"
       }
     }
   }

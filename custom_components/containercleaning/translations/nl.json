@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Configureer Container Cleaning",
-        "description": "Stel je Container Cleaning-integratie in.",
+        "description": "Stel je Container Cleaning-integratie in.\n\nProvider: Kies de gegevensbron.\nPostcode: Postcode van het serviceadres.\nHuisnummer: Huisnummer van het serviceadres.\nHuisnummer toevoeging: Toevoeging of straatnaamdeel zoals door de provider verwacht.\nSluit reiniging van vandaag uit: Als dit is ingeschakeld, tonen sensoren de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon datums/tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Komma-gescheiden lijst met containertypes om te negeren (bijvoorbeeld: gft,pmd).",
         "data": {
           "provider": "Provider",
           "postal_code": "Postcode",
@@ -27,7 +27,7 @@
     "step": {
       "init": {
         "title": "Container Cleaning Opties",
-        "description": "Pas extra opties aan voor de Container Cleaning-integratie.",
+        "description": "Pas extra opties aan voor de Container Cleaning-integratie.\n\nSluit reiniging van vandaag uit: Als dit is ingeschakeld, tonen sensoren de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon datums/tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Komma-gescheiden lijst met containertypes om te negeren (bijvoorbeeld: gft,pmd).\nPoll-interval (uren): Hoe vaak gegevens van de provider worden vernieuwd (1-24 uur).",
         "data": {
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
@@ -262,7 +262,7 @@
         }
       },
       "diagnostic_last_server_update": {
-        "name": "Laatste serverupdate"
+        "name": "Laatste data-ophaling"
       }
     }
   }

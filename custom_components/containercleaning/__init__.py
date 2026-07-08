@@ -80,7 +80,7 @@ def _is_broken_or_generic_sensor_name(custom_name: str | None, original_name: st
 
     normalized_custom_name = custom_name.strip().casefold() if isinstance(custom_name, str) else ""
     normalized_original_name = original_name.strip().casefold() if isinstance(original_name, str) else ""
-    bad_names = {"", "container cleaning"}
+    bad_names = {"", "container cleaning", "cleanprofs"}
 
     return normalized_custom_name in bad_names or normalized_original_name in bad_names
 

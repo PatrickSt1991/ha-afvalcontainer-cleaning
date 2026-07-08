@@ -4,7 +4,6 @@ from homeassistant.helpers import config_validation as cv
 
 from .const.const import (
     DOMAIN,
-    _LOGGER,
     CONF_COLLECTOR,
     CONF_POSTAL_CODE,
     CONF_STREET_NUMBER,
@@ -58,7 +57,6 @@ class ContainerCleaningConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=DATA_SCHEMA,
             errors=errors,
-            description_placeholders={},
         )
 
     def _validate_postal_code(self, postal_code):
@@ -116,4 +114,7 @@ class ContainerCleaningOptionsFlow(config_entries.OptionsFlow):
             }
         )
 
-        return self.async_show_form(step_id="init", data_schema=options_schema)
+        return self.async_show_form(
+            step_id="init",
+            data_schema=options_schema,
+        )
