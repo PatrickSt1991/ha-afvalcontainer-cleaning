@@ -19,10 +19,12 @@ CONF_STREET_NUMBER = "street_number"
 CONF_SUFFIX = "suffix"
 CONF_DATE_FORMAT = "date_format"
 CONF_EXCLUDE_PICKUP_TODAY = "exclude_pickup_today"
-CONF_DEFAULT_LABEL = "default_label"
 CONF_ID = "id"
 CONF_EXCLUDE_LIST = "exclude_list"
 CONF_DATE_ISOFORMAT = "date_isoformat"
+CONF_POLL_INTERVAL_HOURS = "poll_interval_hours"
+
+DEFAULT_POLL_INTERVAL_HOURS = 4
 
 SENSOR_PREFIX = "containercleaning "
 SENSOR_ICON = "mdi:delete-circle-outline"
@@ -33,7 +35,7 @@ ATTR_IS_COLLECTION_DATE_TOMORROW = "is_collection_date_tomorrow"
 ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW = "is_collection_date_day_after_tomorrow"
 ATTR_DAYS_UNTIL_COLLECTION_DATE = "days_until_collection_date"
 
-SCAN_INTERVAL = timedelta(hours=4)
+SCAN_INTERVAL = timedelta(hours=DEFAULT_POLL_INTERVAL_HOURS)
 
 DOMAIN = "containercleaning"
 DOMAIN_DATA = "containercleaning_data"

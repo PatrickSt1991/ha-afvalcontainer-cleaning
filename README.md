@@ -22,6 +22,15 @@ This integration adds **sensors** to Home Assistant that track cleaning services
 - Adds `sensor.cleaningcontainer_*` entities in Home Assistant.  
 - Tracks upcoming container cleaning schedules.  
 - Supports multiple providers (see below).  
+- Uses context-aware icons for provider and summary sensors to improve dashboard readability.
+- Includes a diagnostic sensor for the last successful server update timestamp.
+- Uses a clear integration title (`Container Cleaning`) and provider-based device names (for example `CleanProfs`).
+- Lets you configure the server poll interval from integration settings (1-24 hours).
+- Uses privacy-conscious logging (no address details in normal logs) and warning-level messages for expected provider fetch issues.
+- Enforces HTTPS/TLS certificate validation for provider API requests.
+- Uses exact comma-separated exclude matching (for example `paper,plastic`) to reduce false matches and processing overhead.
+- Reuses a persistent HTTP session for provider polling to reduce connection setup overhead.
+- Parses provider dates once and carries datetime values through transformation to avoid repeated parsing work.
 - Built with inspiration from [@xirixiz/homeassistant-afvalwijzer](https://github.com/xirixiz/homeassistant-afvalwijzer), but focused on **cleaning services** instead of **garbage collection**.
 
 ---
@@ -65,6 +74,10 @@ You can configure the integration either via the **UI** (recommended) or with `c
 1. Go to **Settings → Devices & Services → Integrations**.  
 2. Click **Add Integration**.  
 3. Search for **Container Cleaning** and follow the setup wizard.  
+
+When no cleaning date is available, sensors no longer use a custom fallback label. Home Assistant now shows its built-in translated unknown/unavailable state.
+
+Entity names now use Home Assistant translations. If older entities were created while running a previous naming scheme, the integration performs an automatic one-time registry migration and recreates only broken nameless sensor entries.
 
 
 ---

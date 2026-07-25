@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
-from homeassistant.helpers.restore_state import RestoreEntity
+from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from datetime import datetime, date, timedelta
 import hashlib
 
 from .const.const import (
-    _LOGGER,
     ATTR_DAYS_UNTIL_COLLECTION_DATE,
     ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW,
     ATTR_IS_COLLECTION_DATE_TODAY,
     ATTR_IS_COLLECTION_DATE_TOMORROW,
-    ATTR_LAST_UPDATE,
-    CONF_DEFAULT_LABEL,
     CONF_EXCLUDE_PICKUP_TODAY,
     CONF_ID,
     CONF_COLLECTOR,
@@ -19,43 +17,82 @@ from .const.const import (
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
     CONF_DATE_ISOFORMAT,
+    DOMAIN,
     SENSOR_ICON,
-    SENSOR_PREFIX,
 )
 
 
-class ProviderSensor(RestoreEntity, SensorEntity):
+def _format_sensor_name(raw_value: str) -> str:
+    """Return a human-friendly fallback name for sensors."""
+    acronyms = {"gft", "pmd"}
+    parts = raw_value.replace("-", " ").replace("_", " ").split()
+    formatted = [part.upper() if part.casefold() in acronyms else part.capitalize() for part in parts]
+    return " ".join(formatted)
+
+
+def _provider_icon_for_waste_type(waste_type: str) -> str:
+    """Return a context-aware icon for provider waste types."""
+    icon_map = {
+        "best_tas": "mdi:shopping",
+        "chemisch": "mdi:flask-outline",
+        "gft": "mdi:leaf",
+        "glas": "mdi:glass-fragile",
+        "grofvuil": "mdi:sofa-outline",
+        "kerstbomen": "mdi:pine-tree",
+        "papier": "mdi:newspaper-variant-outline",
+        "plastic": "mdi:bottle-soda-classic-outline",
+        "pmd": "mdi:recycle",
+        "pmd_restafval": "mdi:trash-can-outline",
+        "restafval": "mdi:trash-can-outline",
+        "restafvalzakken": "mdi:bag-personal-outline",
+        "restwagen": "mdi:truck-outline",
+        "snoeiafval": "mdi:leaf-maple",
+        "takken": "mdi:tree-outline",
+        "textiel": "mdi:tshirt-crew-outline",
+        "tuinafval": "mdi:flower-outline",
+    }
+    return icon_map.get(waste_type, SENSOR_ICON)
+
+
+def _provider_display_name(provider: str) -> str:
+    """Return a human-friendly provider display name."""
+    mapping = {
+        "cleanprofs": "CleanProfs",
+    }
+    provider_key = provider.strip().lower()
+    if provider_key in mapping:
+        return mapping[provider_key]
+    return provider.strip().title() if provider.strip() else "Container Cleaning"
+
+
+class ProviderSensor(CoordinatorEntity, SensorEntity):
     """Representation of a provider-based waste sensor."""
 
-    def __init__(self, hass, waste_type, fetch_data, config):
-        """Initialize the sensor."""
-        self.hass = hass
-        self.waste_type = waste_type
-        self.fetch_data = fetch_data
-        self.config = config
-        self._id_name = config.get(CONF_ID)
-        self._default_label = config.get(CONF_DEFAULT_LABEL)
-        self._exclude_pickup_today = str(config.get(CONF_EXCLUDE_PICKUP_TODAY)).lower()
-        self._name = (SENSOR_PREFIX + (f"{self._id_name} " if self._id_name else "")) + waste_type
-        self._last_update = None
-        self._days_until_collection_date = None
-        self._is_collection_date_today = False
-        self._is_collection_date_tomorrow = False
-        self._is_collection_date_day_after_tomorrow = False
-        self._date_isoformat = str(config.get(CONF_DATE_ISOFORMAT)).lower()
-        self._state = self._default_label
-        self._icon = SENSOR_ICON
-        self._unique_id = hashlib.sha1(
-            f"{waste_type}{config.get(CONF_ID)}{config.get(CONF_COLLECTOR)}{config.get(CONF_POSTAL_CODE)}{config.get(CONF_STREET_NUMBER)}{config.get(CONF_SUFFIX, '')}".encode(
-                "utf-8"
-            )
-        ).hexdigest()
-        self._device_class = None
+    _attr_has_entity_name = True
 
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return self._name
+    def __init__(self, coordinator, waste_type, config):
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self.waste_type = waste_type
+        self.config = config
+        self._collector = str(config.get(CONF_COLLECTOR, "")).strip().lower()
+        self._postal_code = str(config.get(CONF_POSTAL_CODE, "")).strip().upper()
+        self._street_number = str(config.get(CONF_STREET_NUMBER, "")).strip()
+        self._suffix = str(config.get(CONF_SUFFIX, "")).strip().lower()
+        self._device_key = f"{self._collector}:{self._postal_code}:{self._street_number}:{self._suffix}"
+        self._exclude_pickup_today = str(config.get(CONF_EXCLUDE_PICKUP_TODAY)).lower()
+        self._date_isoformat = str(config.get(CONF_DATE_ISOFORMAT)).lower()
+        self._icon = _provider_icon_for_waste_type(self.waste_type)
+        key = self.waste_type.replace("-", "_").replace(" ", "_")
+        self._attr_translation_key = f"provider_{key}"
+        self._attr_name = _format_sensor_name(key)
+        self._unique_id = hashlib.sha1(
+            (
+                f"{waste_type}{config.get(CONF_ID)}{config.get(CONF_COLLECTOR)}"
+                f"{config.get(CONF_POSTAL_CODE)}{config.get(CONF_STREET_NUMBER)}"
+                f"{config.get(CONF_SUFFIX, '')}"
+            ).encode("utf-8")
+        ).hexdigest()
 
     @property
     def unique_id(self):
@@ -68,92 +105,63 @@ class ProviderSensor(RestoreEntity, SensorEntity):
         return self._icon
 
     @property
-    def state(self):
-        """Return the state of the sensor."""
-        return self._state
+    def device_info(self) -> DeviceInfo:
+        """Return device metadata so translated entity naming resolves correctly."""
+        provider_name = _provider_display_name(self._collector)
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._device_key)},
+            name=provider_name,
+            manufacturer="Container Cleaning",
+            model=provider_name,
+        )
 
     @property
     def device_class(self):
         """Return the device class of the sensor."""
-        return self._device_class
+        if isinstance(self._get_collection_date(), datetime):
+            return SensorDeviceClass.TIMESTAMP
+        return None
 
     @property
-    def state_attributes(self):
+    def state(self):
+        """Return the state of the sensor."""
+        collection_date = self._get_collection_date()
+        if collection_date is None:
+            return None
+        if isinstance(collection_date, datetime):
+            if self._date_isoformat in ("true", "yes"):
+                return collection_date.isoformat()
+            return collection_date.date()
+        return str(collection_date)
+
+    @property
+    def extra_state_attributes(self):
         """Return the attributes of the sensor."""
-        return {
-            ATTR_LAST_UPDATE: self._last_update,
-            ATTR_DAYS_UNTIL_COLLECTION_DATE: self._days_until_collection_date,
-            ATTR_IS_COLLECTION_DATE_TODAY: self._is_collection_date_today,
-            ATTR_IS_COLLECTION_DATE_TOMORROW: self._is_collection_date_tomorrow,
-            ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW: self._is_collection_date_day_after_tomorrow,
-        }
+        collection_date = self._get_collection_date()
+        attrs = {}
 
-    async def async_update(self):
-        """Fetch the latest data and update the state."""
-        _LOGGER.debug(f"Updating sensor: {self.name}")
+        if isinstance(collection_date, datetime):
+            today = date.today()
+            delta = collection_date.date() - today
+            attrs[ATTR_DAYS_UNTIL_COLLECTION_DATE] = delta.days
+            attrs[ATTR_IS_COLLECTION_DATE_TODAY] = collection_date.date() == today
+            attrs[ATTR_IS_COLLECTION_DATE_TOMORROW] = collection_date.date() == today + timedelta(days=1)
+            attrs[ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW] = collection_date.date() == today + timedelta(days=2)
+        else:
+            attrs[ATTR_DAYS_UNTIL_COLLECTION_DATE] = None
+            attrs[ATTR_IS_COLLECTION_DATE_TODAY] = None
+            attrs[ATTR_IS_COLLECTION_DATE_TOMORROW] = None
+            attrs[ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW] = None
 
-        try:
-            # Call update method from fetch_data
-            await self.hass.async_add_executor_job(self.fetch_data.update)
+        return attrs
 
-            waste_data_provider = (
-                self.fetch_data.waste_data_with_today
-                if self._exclude_pickup_today in ("false", "no")
-                else self.fetch_data.waste_data_without_today
-            )
-
-            if not waste_data_provider or self.waste_type not in waste_data_provider:
-                raise ValueError(f"No data for waste type: {self.waste_type}")
-
-            # Update attributes and state based on the waste data
-            collection_date = waste_data_provider[self.waste_type]
-            if isinstance(collection_date, datetime):
-                self._update_attributes_date(collection_date)
-            else:
-                self._update_attributes_non_date(collection_date)
-
-            # Update last_update timestamp
-            self._last_update = datetime.now().isoformat()
-
-        except Exception as err:
-            _LOGGER.error(f"Error updating sensor {self.name}: {err}")
-            self._handle_value_error()
-
-    def _update_attributes_date(self, collection_date):
-        """Update attributes for a datetime value."""
-        collection_date_object = (
-            collection_date.isoformat() if self._date_isoformat in (
-                "true", "yes") else collection_date.date()
+    def _get_collection_date(self):
+        """Return the collection date for this waste type from coordinator data."""
+        if self.coordinator.data is None:
+            return None
+        waste_data = (
+            self.coordinator.data["waste_data_with_today"]
+            if self._exclude_pickup_today in ("false", "no")
+            else self.coordinator.data["waste_data_without_today"]
         )
-        collection_date_delta = collection_date.date()
-        delta = collection_date_delta - date.today()
-
-        self._days_until_collection_date = delta.days
-        self._update_collection_date_flags(collection_date_delta)
-        self._device_class = SensorDeviceClass.TIMESTAMP
-        self._state = collection_date_object
-
-    def _update_attributes_non_date(self, value):
-        """Update attributes for a non-datetime value."""
-        self._state = str(value)
-        self._days_until_collection_date = None
-        self._device_class = None
-
-    def _update_collection_date_flags(self, collection_date_delta):
-        """Update flags for collection date."""
-        today = date.today()
-        self._is_collection_date_today = collection_date_delta == today
-        self._is_collection_date_tomorrow = collection_date_delta == today + \
-            timedelta(days=1)
-        self._is_collection_date_day_after_tomorrow = collection_date_delta == today + \
-            timedelta(days=2)
-
-    def _handle_value_error(self):
-        """Handle errors in fetching data."""
-        self._state = self._default_label
-        self._is_collection_date_today = None
-        self._is_collection_date_tomorrow = None
-        self._is_collection_date_day_after_tomorrow = None
-        self._days_until_collection_date = None
-        self._device_class = None
-        self._last_update = datetime.now().isoformat()
+        return waste_data.get(self.waste_type)
