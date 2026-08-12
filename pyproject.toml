@@ -1,0 +1,26 @@
+[project]
+name = "ha-afvalcontainer-cleaning"
+version = "2026.06.25"
+description = "Home Assistant custom integration for container cleaning schedules"
+requires-python = ">=3.13"
+dependencies = [
+    "colorlog==6.12.0",
+    "homeassistant",
+    "urllib3>=2.7.0,<3",
+    "flatdict==4.1.0",
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.16",
+    "pre-commit==4.6.1",
+    "bumpver==2026.1132",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
