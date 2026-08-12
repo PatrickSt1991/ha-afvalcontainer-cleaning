@@ -264,6 +264,11 @@
       "diagnostic_last_server_update": {
         "name": "Laatste data-ophaling"
       }
+    },
+    "calendar": {
+      "cleaning_schedule": {
+        "name": "Reinigingsschema"
+      }
     }
   }
 }
