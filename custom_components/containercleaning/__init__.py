@@ -66,6 +66,7 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
             "waste_data_with_today": collector.waste_data_with_today,
             "waste_data_without_today": collector.waste_data_without_today,
             "waste_data_custom": collector.waste_data_custom,
+            "waste_data_events": collector.waste_data_events,
         }
 
 
@@ -162,18 +163,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
-    await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+    await hass.config_entries.async_forward_entry_setups(entry, ["sensor", "calendar"])
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    await hass.config_entries.async_forward_entry_unload(entry, "sensor")
+    unloaded = await hass.config_entries.async_unload_platforms(entry, ["sensor", "calendar"])
     hass.data[DOMAIN].pop(entry.entry_id, None)
 
     if not hass.data[DOMAIN]:
         cleanprofs.close_session()
 
-    return True
+    return unloaded
 
 
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
