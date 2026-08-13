@@ -1,0 +1,21 @@
+# Disposable Home Assistant instance for local integration development.
+#
+#   docker compose -f dev/docker-compose.yml up -d     # start
+#   docker compose -f dev/docker-compose.yml logs -f   # watch logs
+#   docker compose -f dev/docker-compose.yml down       # stop
+#   rm -rf dev/config                                   # full reset
+#
+# Url: http://localhost:8123
+name: containercleaning-dev
+services:
+  homeassistant:
+    container_name: containercleaning-hass
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./config:/config
+      - ../custom_components:/config/custom_components:ro
+    environment:
+      - TZ=Europe/Amsterdam

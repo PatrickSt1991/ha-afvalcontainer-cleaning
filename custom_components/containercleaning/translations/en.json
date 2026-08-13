@@ -265,6 +265,11 @@
       "diagnostic_last_server_update": {
         "name": "Last Data Retrieval"
       }
+    },
+    "calendar": {
+      "cleaning_schedule": {
+        "name": "Cleaning Schedule"
+      }
     }
   }
 }

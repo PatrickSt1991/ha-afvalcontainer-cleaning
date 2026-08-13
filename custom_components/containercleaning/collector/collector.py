@@ -73,6 +73,10 @@ class MainCollector:
         return self._waste_data.waste_data_without_today
 
     @property
+    def waste_data_events(self):
+        return self._waste_data.waste_data_events
+
+    @property
     def waste_data_provider(self):
         return self._waste_data.waste_data_provider
 

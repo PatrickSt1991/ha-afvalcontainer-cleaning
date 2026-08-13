@@ -202,3 +202,12 @@ class WasteDataTransformer(object):
     @property
     def waste_types_custom(self):
         return self._waste_types_custom
+
+    @property
+    def waste_data_events(self):
+        """Return every known pickup (past and future) after exclude_list filtering."""
+        return [
+            item
+            for item in self.waste_data_raw
+            if item["type"] not in self.exclude_types
+        ]
