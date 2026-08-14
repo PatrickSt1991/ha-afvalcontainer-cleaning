@@ -89,7 +89,7 @@ class ContainerCleaningCalendar(CoordinatorEntity, CalendarEntity):
         return CalendarEvent(
             start=start,
             end=start + timedelta(days=1),
-            summary=_format_sensor_name(item["type"]),
+            summary=f"Cleaning: {_format_sensor_name(item['type'])}",
         )
 
     @property
