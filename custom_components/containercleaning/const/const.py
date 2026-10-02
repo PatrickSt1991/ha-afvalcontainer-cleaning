@@ -5,7 +5,7 @@ _LOGGER = logging.getLogger(__name__)
 
 API = "api"
 NAME = "containercleaning"
-VERSION = "2025.08.17"
+VERSION = "2026.10.02"
 
 ISSUE_URL = "https://github.com/PatrickSt1991/ha-afvalcontainer-cleaning/issues"
 
