@@ -7,6 +7,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const.const import (
+    PROVIDER_DISPLAY_NAMES,
     CONF_ID,
     CONF_COLLECTOR,
     CONF_POSTAL_CODE,
@@ -27,12 +28,9 @@ def _format_sensor_name(raw_value: str) -> str:
 
 def _provider_display_name(provider: str) -> str:
     """Return a human-friendly provider display name."""
-    mapping = {
-        "cleanprofs": "CleanProfs",
-    }
     provider_key = provider.strip().lower()
-    if provider_key in mapping:
-        return mapping[provider_key]
+    if provider_key in PROVIDER_DISPLAY_NAMES:
+        return PROVIDER_DISPLAY_NAMES[provider_key]
     return provider.strip().title() if provider.strip() else "Container Cleaning"
 
 

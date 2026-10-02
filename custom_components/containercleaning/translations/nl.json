@@ -3,12 +3,28 @@
     "step": {
       "user": {
         "title": "Configureer Container Cleaning",
-        "description": "Stel je Container Cleaning-integratie in.\n\nProvider: Kies de gegevensbron.\nPostcode: Postcode van het serviceadres.\nHuisnummer: Huisnummer van het serviceadres.\nHuisnummer toevoeging: Toevoeging of straatnaamdeel zoals door de provider verwacht.\nSluit reiniging van vandaag uit: Als dit is ingeschakeld, tonen sensoren de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon datums/tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Komma-gescheiden lijst met containertypes om te negeren (bijvoorbeeld: gft,pmd).",
+        "description": "Stel je containerreiniging-integratie in.\n\nProvider: Kies de gegevensbron. Kies 'manual' als je reinigingsdienst geen API heeft; je geeft dan een JSON- of iCal-bestand (.ics), of een iCal-URL, met de reinigingsdata op.",
         "data": {
-          "provider": "Provider",
+          "provider": "Provider"
+        }
+      },
+      "address": {
+        "title": "Serviceadres",
+        "description": "Postcode: Postcode van het serviceadres.\nHuisnummer: Huisnummer van het serviceadres.\nHuisnummer toevoeging: Toevoeging die je provider gebruikt.\nSluit reiniging van vandaag uit: Indien ingeschakeld negeren sensoren reiniging van vandaag en tonen ze de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Door komma's gescheiden containertypes om te negeren (bijvoorbeeld: gft,pmd).",
+        "data": {
           "postal_code": "Postcode",
           "street_number": "Huisnummer",
           "suffix": "Huisnummer toevoeging",
+          "exclude_pickup_today": "Sluit reiniging van vandaag uit",
+          "date_isoformat": "Gebruik ISO-datumformaat",
+          "exclude_list": "Containertype uitsluiten"
+        }
+      },
+      "manual": {
+        "title": "Handmatig datumbestand",
+        "description": "Bestandspad of URL: Een JSON-bestand (.json) of iCalendar-bestand (.ics) in je Home Assistant-configuratiemap, of een http(s)-URL naar een iCal-feed. Relatieve paden worden vanaf de configuratiemap opgelost. Als een JSON-pad nog niet bestaat, wordt een voorbeeldbestand aangemaakt dat je kunt bewerken.\n\nJSON-voorbeeld: {\"cleanings\": [{\"type\": \"gft\", \"date\": \"2026-10-15\"}]}\n\nSluit reiniging van vandaag uit: Indien ingeschakeld negeren sensoren reiniging van vandaag en tonen ze de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Door komma's gescheiden containertypes om te negeren (bijvoorbeeld: gft,pmd).",
+        "data": {
+          "file_path": "Bestandspad of URL",
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
           "exclude_list": "Containertype uitsluiten"
@@ -17,7 +33,8 @@
     },
     "error": {
       "invalid_postal_code": "Ongeldig postcodeformaat",
-      "invalid_street_number": "Huisnummer moet numeriek zijn"
+      "invalid_street_number": "Huisnummer moet numeriek zijn",
+      "invalid_file_path": "Geef een .json- of .ics-bestandspad op, of een http(s)-URL"
     },
     "abort": {
       "already_configured": "Container Cleaning is al geconfigureerd"
@@ -27,13 +44,17 @@
     "step": {
       "init": {
         "title": "Container Cleaning Opties",
-        "description": "Pas extra opties aan voor de Container Cleaning-integratie.\n\nSluit reiniging van vandaag uit: Als dit is ingeschakeld, tonen sensoren de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon datums/tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Komma-gescheiden lijst met containertypes om te negeren (bijvoorbeeld: gft,pmd).\nPoll-interval (uren): Hoe vaak gegevens van de provider worden vernieuwd (1-24 uur).",
+        "description": "Pas extra opties aan voor de Container Cleaning-integratie.\n\nSluit reiniging van vandaag uit: Als dit is ingeschakeld, tonen sensoren de eerstvolgende reiniging na vandaag.\nGebruik ISO-datumformaat: Toon datums/tijdstempels in ISO-formaat waar van toepassing.\nContainertype uitsluiten: Komma-gescheiden lijst met containertypes om te negeren (bijvoorbeeld: gft,pmd).\nPoll-interval (uren): Hoe vaak gegevens van de provider worden vernieuwd (1-24 uur).\nBestandspad of URL: Locatie van het handmatige JSON/iCal-datumbestand of de iCal-URL (alleen handmatige provider).",
         "data": {
+          "file_path": "Bestandspad of URL",
           "exclude_pickup_today": "Sluit reiniging van vandaag uit",
           "date_isoformat": "Gebruik ISO-datumformaat",
           "exclude_list": "Containertype uitsluiten",
           "poll_interval_hours": "Poll-interval (uren)"
         }
+      },
+      "error": {
+        "invalid_file_path": "Geef een .json- of .ics-bestandspad op, of een http(s)-URL"
       }
     }
   },

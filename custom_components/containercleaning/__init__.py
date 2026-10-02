@@ -1,18 +1,24 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryError
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from datetime import timedelta
 from datetime import datetime, timezone
+import os
 
 from .collector.collector import MainCollector
-from .collector import cleanprofs
+from .collector import cleanprofs, manual
 from .const.const import (
     DOMAIN,
     _LOGGER,
     CONF_COLLECTOR,
+    CONF_FILE_PATH,
+    DEFAULT_MANUAL_FILE_PATH,
+    PROVIDER_DISPLAY_NAMES,
+    SENSOR_COLLECTORS_MANUAL,
     CONF_POSTAL_CODE,
     CONF_STREET_NUMBER,
     CONF_SUFFIX,
@@ -36,6 +42,7 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(hours=poll_interval_hours) if poll_interval_hours > 0 else SCAN_INTERVAL,
         )
         self.config = config
+        self.file_path = resolve_manual_file_path(hass, config)
 
     async def _async_update_data(self) -> dict:
         _LOGGER.debug("Fetching container cleaning data from provider")
@@ -61,6 +68,7 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
             },
             self.config.get(CONF_EXCLUDE_PICKUP_TODAY),
             str(self.config.get(CONF_EXCLUDE_LIST, "")),
+            file_path=self.file_path,
         )
         return {
             "waste_data_with_today": collector.waste_data_with_today,
@@ -68,6 +76,31 @@ class ContainerCleaningCoordinator(DataUpdateCoordinator):
             "waste_data_custom": collector.waste_data_custom,
             "waste_data_events": collector.waste_data_events,
         }
+
+
+def resolve_manual_file_path(hass: HomeAssistant, config: dict) -> str | None:
+    """Return the manual date source (absolute file path or URL), or None for API-based providers.
+
+    Relative paths are resolved against the Home Assistant config directory.
+    Paths outside the config directory must be listed in ``allowlist_external_dirs``.
+    """
+    provider = str(config.get(CONF_COLLECTOR, "")).strip().lower()
+    if provider not in SENSOR_COLLECTORS_MANUAL:
+        return None
+
+    raw_path = str(config.get(CONF_FILE_PATH) or DEFAULT_MANUAL_FILE_PATH).strip()
+    if manual.is_url(raw_path):
+        return raw_path
+
+    file_path = raw_path if os.path.isabs(raw_path) else hass.config.path(raw_path)
+    file_path = os.path.normpath(file_path)
+
+    if not hass.config.is_allowed_path(file_path):
+        raise ValueError(
+            f"Manual date file '{file_path}' is outside the Home Assistant config directory; "
+            "add its directory to allowlist_external_dirs"
+        )
+    return file_path
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -114,12 +147,9 @@ async def _async_migrate_broken_entity_names(hass: HomeAssistant, entry: ConfigE
 
 def _provider_display_name(provider: str) -> str:
     """Return a human-friendly provider display name."""
-    mapping = {
-        "cleanprofs": "CleanProfs",
-    }
     provider_key = provider.strip().lower()
-    if provider_key in mapping:
-        return mapping[provider_key]
+    if provider_key in PROVIDER_DISPLAY_NAMES:
+        return PROVIDER_DISPLAY_NAMES[provider_key]
     return provider.strip().title() if provider.strip() else "Container Cleaning"
 
 
@@ -154,6 +184,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await _async_migrate_broken_entity_names(hass, entry)
 
     merged_config = {**entry.data, **entry.options}
+
+    try:
+        manual_file_path = resolve_manual_file_path(hass, merged_config)
+    except ValueError as err:
+        raise ConfigEntryError(str(err)) from err
+
+    if manual_file_path:
+        # Give first-time users a template to edit instead of failing on a missing file.
+        try:
+            await hass.async_add_executor_job(manual.write_example_file, manual_file_path)
+        except OSError as err:
+            _LOGGER.warning("Could not create example manual date file %s: %s", manual_file_path, err)
 
     coordinator = ContainerCleaningCoordinator(hass, merged_config)
     await coordinator.async_config_entry_first_refresh()

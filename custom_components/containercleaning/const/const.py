@@ -13,6 +13,16 @@ SENSOR_COLLECTORS_CLEANPROFS = {
     "cleanprofs": "https://cleanprofs.jmsdev.nl/api/get-plannings-address?zipcode={0}&house_number={1}&suffix={2}",
 }
 
+# Providers without an API: dates are maintained by the user in a local JSON file.
+SENSOR_COLLECTORS_MANUAL = {
+    "manual": "Manual date file",
+}
+
+PROVIDER_DISPLAY_NAMES = {
+    "cleanprofs": "CleanProfs",
+    **SENSOR_COLLECTORS_MANUAL,
+}
+
 CONF_COLLECTOR = "provider"
 CONF_POSTAL_CODE = "postal_code"
 CONF_STREET_NUMBER = "street_number"
@@ -23,6 +33,9 @@ CONF_ID = "id"
 CONF_EXCLUDE_LIST = "exclude_list"
 CONF_DATE_ISOFORMAT = "date_isoformat"
 CONF_POLL_INTERVAL_HOURS = "poll_interval_hours"
+CONF_FILE_PATH = "file_path"
+
+DEFAULT_MANUAL_FILE_PATH = "containercleaning/cleaning_dates.json"
 
 DEFAULT_POLL_INTERVAL_HOURS = 4
 

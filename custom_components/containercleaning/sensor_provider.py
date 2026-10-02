@@ -6,6 +6,7 @@ from datetime import datetime, date, timedelta
 import hashlib
 
 from .const.const import (
+    PROVIDER_DISPLAY_NAMES,
     ATTR_DAYS_UNTIL_COLLECTION_DATE,
     ATTR_IS_COLLECTION_DATE_DAY_AFTER_TOMORROW,
     ATTR_IS_COLLECTION_DATE_TODAY,
@@ -56,12 +57,9 @@ def _provider_icon_for_waste_type(waste_type: str) -> str:
 
 def _provider_display_name(provider: str) -> str:
     """Return a human-friendly provider display name."""
-    mapping = {
-        "cleanprofs": "CleanProfs",
-    }
     provider_key = provider.strip().lower()
-    if provider_key in mapping:
-        return mapping[provider_key]
+    if provider_key in PROVIDER_DISPLAY_NAMES:
+        return PROVIDER_DISPLAY_NAMES[provider_key]
     return provider.strip().title() if provider.strip() else "Container Cleaning"
 
 
