@@ -22,6 +22,7 @@ This integration adds **sensors** to Home Assistant that track cleaning services
 - Adds `sensor.cleaningcontainer_*` entities in Home Assistant.  
 - Tracks upcoming container cleaning schedules.  
 - Supports multiple providers (see below).  
+- Supports a **manual date file** (JSON or iCal `.ics`, local file or URL) for cleaning services without an API, such as VCCS.  
 - Uses context-aware icons for provider and summary sensors to improve dashboard readability.
 - Includes a diagnostic sensor for the last successful server update timestamp.
 - Uses a clear integration title (`Container Cleaning`) and provider-based device names (for example `CleanProfs`).
@@ -38,11 +39,13 @@ This integration adds **sensors** to Home Assistant that track cleaning services
 ## 📦 Supported Providers
 Currently, the integration supports the following providers/communities:
 
-| Provider   |
-|------------|
-| **cleanprofs** |
+| Provider   | Source |
+|------------|--------|
+| **cleanprofs** | CleanProfs API (postal code + house number) |
+| **manual** | Your own JSON or iCal (`.ics`) file, or an iCal URL — for services without an API (for example VCCS) |
 
 > ⚠️ Availability depends on whether your municipality or service provider is supported and/or can be added.
+> If your service has no API but lets you download an iCal/ICS calendar, use the **manual** provider.
 
 ---
 
@@ -74,6 +77,44 @@ You can configure the integration either via the **UI** (recommended) or with `c
 1. Go to **Settings → Devices & Services → Integrations**.  
 2. Click **Add Integration**.  
 3. Search for **Container Cleaning** and follow the setup wizard.  
+4. Pick a provider. For `cleanprofs` you enter your address; for `manual` you point the integration at a date file or URL (see below).  
+
+### Option 2: Manual date file (JSON or iCal)
+
+Use the **manual** provider when your cleaning service (for example **VCCS**) has no public API. You maintain the dates yourself, or let the integration read an iCal calendar the service lets you download.
+
+The *File path or URL* field accepts:
+
+| Value | Behaviour |
+|-------|-----------|
+| `containercleaning/cleaning_dates.json` (default) | JSON file relative to your Home Assistant config directory. If it does not exist yet, an example file is created for you to edit. |
+| `containercleaning/vccs.ics` | An iCalendar file you downloaded from your cleaning service and placed in the config directory. |
+| `https://example.com/calendar.ics` | An iCal (or JSON) URL that is downloaded every poll interval, so updates arrive automatically. |
+| `/media/cleaning.json` | An absolute path. Paths outside the config directory must be listed in `allowlist_external_dirs`. |
+
+**JSON format** — either a list of entries or a mapping per container type (both may be wrapped in a `cleanings` key). Dates are `YYYY-MM-DD` or `DD-MM-YYYY`:
+
+```json
+{
+  "cleanings": [
+    { "type": "gft", "date": "2026-10-15" },
+    { "type": "restafval", "date": "15-10-2026" }
+  ]
+}
+```
+
+```json
+{
+  "gft": ["2026-10-15", "2026-11-12"],
+  "restafval": ["2026-10-15"]
+}
+```
+
+**iCal format** — every `VEVENT` becomes a cleaning. `DTSTART` is the date and the container type is taken from `SUMMARY`: a known type inside the summary wins (for example `Reiniging GFT container` → `gft`, `Containerreiniging restafval` → `restafval`); otherwise the whole summary is used as the type. Recurring events (`RRULE`) are not expanded, only their first date is used.
+
+Container types use the same names as the API providers (`gft`, `restafval`, `pmd`, `papier`, `plastic`, `glas`, …), so the same sensors, icons and translations apply. Unknown names simply become their own sensor.
+
+The file is re-read every poll interval (default 4 hours). After editing it you can also reload the integration from **Settings → Devices & Services** to apply changes immediately. The file path or URL can be changed later via the integration's **Configure** dialog.
 
 When no cleaning date is available, sensors no longer use a custom fallback label. Home Assistant now shows its built-in translated unknown/unavailable state.
 

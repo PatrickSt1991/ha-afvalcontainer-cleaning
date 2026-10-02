@@ -2,10 +2,12 @@ from ..common.main_functions import normalize_bool_param
 from ..common.waste_data_transformer import WasteDataTransformer
 from ..const.const import (
     _LOGGER,
-    SENSOR_COLLECTORS_CLEANPROFS
+    SENSOR_COLLECTORS_CLEANPROFS,
+    SENSOR_COLLECTORS_MANUAL,
 )
 
 from . import cleanprofs
+from . import manual
 
 class MainCollector:
     """
@@ -18,9 +20,11 @@ class MainCollector:
         address: dict,
         exclude_pickup_today,
         exclude_list: str,
+        file_path: str | None = None,
     ):
         # Normalize input parameters
         self.provider = str(provider).strip().lower()
+        self.file_path = str(file_path).strip() if file_path else ""
         self.postal_code = str(address.get("postal_code", "")).strip().upper()
         self.street_number = str(address.get("street_number", "")).strip()
         self.suffix = str(address.get("suffix", "")).strip().lower()
@@ -31,6 +35,11 @@ class MainCollector:
         waste_data_raw = self._get_waste_data_raw()
 
         if not isinstance(waste_data_raw, list):
+            if self.provider in SENSOR_COLLECTORS_MANUAL:
+                raise ValueError(
+                    f"No valid cleaning dates read from manual date source '{self.file_path}'. "
+                    "Check that the file or URL exists and contains valid JSON or iCalendar data."
+                )
             raise ValueError(
                 f"No valid waste data received from provider '{self.provider}'. "
                 "Check your postal code, street number, and provider configuration."
@@ -48,6 +57,10 @@ class MainCollector:
         Determines the correct provider module to call based on the provider and retrieves raw waste data.
         """
         try:
+            if self.provider in SENSOR_COLLECTORS_MANUAL:
+                _LOGGER.debug("Using manual date file provider")
+                return manual.get_waste_data_raw(self.provider, self.file_path)
+
             # List of providers with common parameter signatures
             common_providers = [
                 (SENSOR_COLLECTORS_CLEANPROFS, cleanprofs.get_waste_data_raw)
